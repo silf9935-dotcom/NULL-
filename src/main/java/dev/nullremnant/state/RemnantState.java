@@ -14,6 +14,8 @@ public final class RemnantState extends PersistentState {
     private String rememberedBlockId = "";
     private int rememberedBlockX, rememberedBlockY, rememberedBlockZ;
     private long lastAreaEcho = -1;
+    private boolean shadowActive;
+    private int shadowX, shadowY, shadowZ, shadowSteps;
 
     public static RemnantState load(NbtCompound n) {
         RemnantState s = new RemnantState();
@@ -44,6 +46,8 @@ public final class RemnantState extends PersistentState {
         s.rememberedAreaX = n.getInt("rememberedAreaX"); s.rememberedAreaZ = n.getInt("rememberedAreaZ");
         s.areaRevisits = n.getInt("areaRevisits"); s.areaInitialized = n.getBoolean("areaInitialized");
         s.rememberedAreaSet = n.getBoolean("rememberedAreaSet"); s.areaEchoPlaced = n.getBoolean("areaEchoPlaced"); s.lastAreaEcho = n.getLong("lastAreaEcho");
+        s.shadowActive = n.getBoolean("shadowActive");
+        s.shadowX = n.getInt("shadowX"); s.shadowY = n.getInt("shadowY"); s.shadowZ = n.getInt("shadowZ"); s.shadowSteps = n.getInt("shadowSteps");
         s.buildEchoPlaced = n.getBoolean("buildEchoPlaced");
         s.rememberedBlockId = n.getString("rememberedBlockId");
         s.rememberedBlockX = n.getInt("rememberedBlockX"); s.rememberedBlockY = n.getInt("rememberedBlockY"); s.rememberedBlockZ = n.getInt("rememberedBlockZ");
@@ -79,6 +83,8 @@ public final class RemnantState extends PersistentState {
         n.putInt("rememberedAreaX", rememberedAreaX); n.putInt("rememberedAreaZ", rememberedAreaZ);
         n.putInt("areaRevisits", areaRevisits); n.putBoolean("areaInitialized", areaInitialized);
         n.putBoolean("rememberedAreaSet", rememberedAreaSet); n.putBoolean("areaEchoPlaced", areaEchoPlaced); n.putLong("lastAreaEcho", lastAreaEcho);
+        n.putBoolean("shadowActive", shadowActive);
+        n.putInt("shadowX", shadowX); n.putInt("shadowY", shadowY); n.putInt("shadowZ", shadowZ); n.putInt("shadowSteps", shadowSteps);
         n.putBoolean("buildEchoPlaced", buildEchoPlaced);
         n.putString("rememberedBlockId", rememberedBlockId);
         n.putInt("rememberedBlockX", rememberedBlockX); n.putInt("rememberedBlockY", rememberedBlockY); n.putInt("rememberedBlockZ", rememberedBlockZ);
@@ -119,6 +125,11 @@ public final class RemnantState extends PersistentState {
     public int rememberedBlockY() { return rememberedBlockY; }
     public int rememberedBlockZ() { return rememberedBlockZ; }
     public boolean buildEchoPlaced() { return buildEchoPlaced; }
+    public boolean shadowActive() { return shadowActive; }
+    public int shadowX() { return shadowX; }
+    public int shadowY() { return shadowY; }
+    public int shadowZ() { return shadowZ; }
+    public int shadowSteps() { return shadowSteps; }
 
     public void day(int v) { day = v; markDirty(); }
     public void stage(int v) { stage = v; markDirty(); }
@@ -158,4 +169,7 @@ public final class RemnantState extends PersistentState {
     public void areaEchoPlaced(boolean v) { areaEchoPlaced = v; markDirty(); }
     public void rememberBlock(String id, int x, int y, int z) { rememberedBlockId = id; rememberedBlockX = x; rememberedBlockY = y; rememberedBlockZ = z; markDirty(); }
     public void buildEchoPlaced(boolean v) { buildEchoPlaced = v; markDirty(); }
+    public void startShadow(int x, int y, int z) { shadowActive = true; shadowX = x; shadowY = y; shadowZ = z; shadowSteps = 0; markDirty(); }
+    public void moveShadow(int x, int y, int z) { shadowX = x; shadowY = y; shadowZ = z; shadowSteps++; markDirty(); }
+    public void stopShadow() { shadowActive = false; shadowSteps = 0; markDirty(); }
 }
