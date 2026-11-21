@@ -247,12 +247,17 @@ public class RemnantEntity extends ZombieEntity {
     }
 
     @Override
+    protected boolean canConvertInWater() {
+        return false;
+    }
+
+    @Override
     protected boolean shouldDropLoot() {
         return false;
     }
 
     @Override
-    protected int getExperienceToDrop(ServerWorld world) {
+    public int getXpToDrop() {
         return 0;
     }
 
