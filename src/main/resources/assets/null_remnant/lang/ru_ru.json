@@ -90,5 +90,7 @@
   "command.null_remnant.create_failed": "Не удалось создать сущность Остатка.",
   "command.null_remnant.spawn_failed": "Не удалось добавить Остаток в этот мир.",
   "command.null_remnant.spawned": "Остаток появился в точке %s, %s, %s.",
-  "command.null_remnant.despawned": "Удалено сущностей Остатка в этом измерении: %s."
+  "command.null_remnant.despawned": "Удалено сущностей Остатка в этом измерении: %s.",
+  "command.null_remnant.despawned_one": "Удалена 1 сущность Остатка из этого измерения.",
+  "command.null_remnant.despawned_many": "Удалено сущностей Остатка из этого измерения: %s."
 }
