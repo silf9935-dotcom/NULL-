@@ -8,7 +8,6 @@ import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.ModelPart;
 import net.minecraft.util.math.MathHelper;
 public final class RemnantModel extends EntityModel<RemnantEntity> {
  private final ModelPart head,body,leftArm,rightArm,leftLeg,rightLeg;
