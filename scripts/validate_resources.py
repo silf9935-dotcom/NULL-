@@ -54,6 +54,9 @@ def main() -> None:
     if not item_source.is_file():
         raise SystemExit("The dedicated creative-tab item registration is missing")
     item_code = item_source.read_text(encoding="utf-8")
+    egg_model = ROOT / "src/main/resources/assets/null_remnant/models/item/remnant_spawn_egg.json"
+    if not egg_model.is_file() or load_json(egg_model).get("parent") != "minecraft:item/template_spawn_egg":
+        raise SystemExit("The Remnant spawn egg item model is missing or invalid")
     for required in ("remnant_spawn_egg", "Registries.ITEM_GROUP", "ItemGroups.SPAWN_EGGS"):
         if required not in item_code:
             raise SystemExit(f"RemnantItems.java is missing required registration: {required}")
