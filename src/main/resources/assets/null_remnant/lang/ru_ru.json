@@ -1,1 +1,19 @@
-{"modmenu.nameTranslation.null_remnant":"NULL: Остаток","modmenu.description.null_remnant":"Психологический хоррор с постепенной эскалацией.","message.null_remnant.stage1":"Мир кажется немного неправильным.","message.null_remnant.stage2":"Что-то заметило тебя.","message.null_remnant.stage3":"Реальность начинает трескаться.","message.null_remnant.stage4":"Оно помнит твоё присутствие."}
+{
+  "modmenu.nameTranslation.null_remnant": "NULL: Остаток",
+  "modmenu.description.null_remnant": "Психологический хоррор с постепенной эскалацией.",
+  "message.null_remnant.stage1": "Мир кажется немного неправильным.",
+  "message.null_remnant.stage2": "Этот мир что-то помнит.",
+  "message.null_remnant.stage3": "Ты здесь больше не один.",
+  "message.null_remnant.stage4": "Мир начал повторяться.",
+  "message.null_remnant.finale1": "Оно узнало, с чего ты начал.",
+  "message.null_remnant.finale2": "Следующая дверь может не привести обратно.",
+  "lore.null_remnant.stage0": "Первый мир был тихим. Слишком тихим, чтобы быть пустым.",
+  "lore.null_remnant.stage1": "За деревьями видели силуэт. Больше его никто не встречал.",
+  "lore.null_remnant.stage2": "Знаки начали появляться возле мест, где ты уже бывал.",
+  "lore.null_remnant.stage3": "Оно копирует твои постройки. Но не понимает, зачем они нужны.",
+  "lore.null_remnant.stage4": "Оно верит, что этот мир принадлежит тому, кто возвращается.",
+  "hud.null_remnant.whisper1": "Ты здесь не один.",
+  "hud.null_remnant.whisper2": "Оно тебя увидело.",
+  "hud.null_remnant.whisper3": "Не отводи взгляд.",
+  "hud.null_remnant.whisper4": "Оно помнит."
+}
