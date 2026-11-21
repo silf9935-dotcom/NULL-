@@ -4,6 +4,7 @@ import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.state.StateAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.ItemStack;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
@@ -254,6 +255,11 @@ public class RemnantEntity extends ZombieEntity {
     @Override
     protected boolean shouldDropLoot() {
         return false;
+    }
+
+    @Override
+    protected ItemStack getSkull() {
+        return ItemStack.EMPTY;
     }
 
     @Override
