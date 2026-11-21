@@ -1,5 +1,6 @@
 package dev.nullremnant.entity;
 
+import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.state.StateAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
@@ -50,7 +51,7 @@ public class RemnantEntity extends ZombieEntity {
         goalSelector.add(1, new MeleeAttackGoal(this, 1.15, false) {
             @Override
             public boolean canStart() {
-                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4
+                return RemnantConfig.enabled && getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4
                     && retreatTicks <= 0 && super.canStart();
             }
 
@@ -100,7 +101,7 @@ public class RemnantEntity extends ZombieEntity {
         targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true) {
             @Override
             public boolean canStart() {
-                return retreatTicks <= 0 && super.canStart();
+                return RemnantConfig.enabled && retreatTicks <= 0 && super.canStart();
             }
         });
     }
@@ -109,6 +110,13 @@ public class RemnantEntity extends ZombieEntity {
     public void tick() {
         super.tick();
         lifetimeTicks++;
+        if (!RemnantConfig.enabled) {
+            setTarget(null);
+            getNavigation().stop();
+            retreatTicks = 0;
+            setInvisible(false);
+            return;
+        }
         LivingEntity target = getTarget();
         if (target instanceof PlayerEntity player && player.isAlive()) {
             if (squaredDistanceTo(player) < 256.0 && looksAt(player, this)) {
