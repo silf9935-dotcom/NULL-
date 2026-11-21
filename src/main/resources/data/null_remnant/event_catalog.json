@@ -2,9 +2,9 @@
   "schema": 1,
   "stages": [
     {"id":"quiet","day_start":0,"day_end":2,"events":["wind_footsteps","distant_door","chunk_pause"],"weight":0},
-    {"id":"awakening","day_start":3,"day_end":9,"events":["forest_steps","bedrock_cross","lore_sign","unexplained_change"],"weight":8},
+    {"id":"awakening","day_start":3,"day_end":9,"events":["forest_steps","smoke_cross","lore_sign","unexplained_change"],"weight":8},
     {"id":"aggression","day_start":10,"day_end":14,"events":["closed_door_message","fog_figure","door_sound","player_quote"],"weight":18},
-    {"id":"fracture","day_start":15,"day_end":20,"events":["familiar_landscape","bedrock_cross","delayed_steps","repeated_sound"],"weight":30},
+    {"id":"fracture","day_start":15,"day_end":20,"events":["familiar_landscape","smoke_cross","delayed_steps","repeated_sound"],"weight":30},
     {"id":"finale","day_start":21,"day_end":999999,"events":["home_sign","interior_door","spawn_figure","single_player"],"weight":42}
   ],
   "design_note": "Reference catalog for implemented narrative event pools. This file does not itself execute events."
