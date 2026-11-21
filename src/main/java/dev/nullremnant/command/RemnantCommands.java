@@ -45,6 +45,8 @@ public final class RemnantCommands {
                     context.getSource().sendFeedback(() -> Text.translatable(
                         "command.null_remnant.reloaded",
                         RemnantConfig.enabled,
+                        RemnantConfig.nightmares,
+                        RemnantConfig.subtleAnomalies,
                         RemnantConfig.eventFrequency,
                         RemnantConfig.stalkerFrequency
                     ), true);
@@ -62,7 +64,11 @@ public final class RemnantCommands {
                         state.awareness(),
                         state.intrusion(),
                         entities,
-                        RemnantConfig.enabled
+                        RemnantConfig.enabled,
+                        RemnantConfig.nightmares,
+                        RemnantConfig.subtleAnomalies,
+                        RemnantConfig.eventFrequency,
+                        RemnantConfig.stalkerFrequency
                     ), false);
                     return Command.SINGLE_SUCCESS;
                 }))
