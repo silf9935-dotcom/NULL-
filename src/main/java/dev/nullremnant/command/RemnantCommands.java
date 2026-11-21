@@ -24,14 +24,7 @@ public final class RemnantCommands {
             dispatcher.register(CommandManager.literal("remnant")
                 .then(CommandManager.literal("help").executes(context -> {
                     ServerCommandSource source = context.getSource();
-                    source.sendFeedback(() -> Text.literal(
-                        "NULL: The Remnant commands\n" +
-                        "/remnant lore - read the current world chapter\n" +
-                        "/remnant status - show world state (operator)\n" +
-                        "/remnant spawn - summon the Remnant safely (operator)\n" +
-                        "/remnant despawn - remove Remnant entities in this dimension (operator)\n" +
-                        "/remnant reload - reload config/null_remnant.json (operator)"
-                    ), false);
+                    source.sendFeedback(() -> Text.translatable("command.null_remnant.help"), false);
                     return Command.SINGLE_SUCCESS;
                 }))
                 .then(CommandManager.literal("lore").executes(context -> {
@@ -49,10 +42,11 @@ public final class RemnantCommands {
                 }))
                 .then(CommandManager.literal("reload").requires(source -> source.hasPermissionLevel(2)).executes(context -> {
                     RemnantConfig.load();
-                    context.getSource().sendFeedback(() -> Text.literal(
-                        "NULL Remnant config reloaded. enabled=" + RemnantConfig.enabled
-                            + ", eventFrequency=" + RemnantConfig.eventFrequency
-                            + ", stalkerFrequency=" + RemnantConfig.stalkerFrequency
+                    context.getSource().sendFeedback(() -> Text.translatable(
+                        "command.null_remnant.reloaded",
+                        RemnantConfig.enabled,
+                        RemnantConfig.eventFrequency,
+                        RemnantConfig.stalkerFrequency
                     ), true);
                     return Command.SINGLE_SUCCESS;
                 }))
@@ -60,43 +54,50 @@ public final class RemnantCommands {
                     ServerWorld world = context.getSource().getWorld();
                     RemnantState state = StateAccess.get(world);
                     int entities = world.getEntitiesByType(RemnantEntities.REMNANT, RemnantEntity::isAlive).size();
-                    String status = "NULL Remnant | day " + state.day()
-                        + " | stage " + state.stage()
-                        + " | fear " + state.fear()
-                        + " | awareness " + state.awareness()
-                        + " | intrusion " + state.intrusion()
-                        + " | active entities " + entities
-                        + " | enabled " + RemnantConfig.enabled;
-                    context.getSource().sendFeedback(() -> Text.literal(status), false);
+                    context.getSource().sendFeedback(() -> Text.translatable(
+                        "command.null_remnant.status",
+                        state.day(),
+                        state.stage() + 1,
+                        state.fear(),
+                        state.awareness(),
+                        state.intrusion(),
+                        entities,
+                        RemnantConfig.enabled
+                    ), false);
                     return Command.SINGLE_SUCCESS;
                 }))
                 .then(CommandManager.literal("spawn").requires(source -> source.hasPermissionLevel(2)).executes(context -> {
                     ServerCommandSource source = context.getSource();
                     if (!RemnantConfig.enabled) {
-                        source.sendError(Text.literal("NULL Remnant is disabled in the configuration."));
+                        source.sendError(Text.translatable("command.null_remnant.disabled"));
                         return 0;
                     }
-                    ServerPlayerEntity player = source.getPlayerOrThrow();
+                    if (!(source.getEntity() instanceof ServerPlayerEntity player)) {
+                        source.sendError(Text.translatable("command.null_remnant.player_only"));
+                        return 0;
+                    }
                     ServerWorld world = source.getWorld();
                     BlockPos spawn = findSafeSpawn(world, player);
                     if (spawn == null) {
-                        source.sendError(Text.literal("Could not find a safe, loaded spawn position near you."));
+                        source.sendError(Text.translatable("command.null_remnant.no_safe_spawn"));
                         return 0;
                     }
                     RemnantEntity entity = RemnantEntities.REMNANT.create(world);
                     if (entity == null) {
-                        source.sendError(Text.literal("Could not create the Remnant entity."));
+                        source.sendError(Text.translatable("command.null_remnant.create_failed"));
                         return 0;
                     }
                     entity.refreshPositionAndAngles(spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5,
                         world.getRandom().nextFloat() * 360.0f, 0.0f);
                     entity.setTarget(player);
                     if (!world.spawnEntity(entity)) {
-                        source.sendError(Text.literal("The Remnant could not be added to this world."));
+                        source.sendError(Text.translatable("command.null_remnant.spawn_failed"));
                         return 0;
                     }
-                    source.sendFeedback(() -> Text.literal("Spawned the Remnant at " +
-                        spawn.getX() + ", " + spawn.getY() + ", " + spawn.getZ() + "."), true);
+                    source.sendFeedback(() -> Text.translatable(
+                        "command.null_remnant.spawned",
+                        spawn.getX(), spawn.getY(), spawn.getZ()
+                    ), true);
                     return Command.SINGLE_SUCCESS;
                 }))
                 .then(CommandManager.literal("despawn").requires(source -> source.hasPermissionLevel(2)).executes(context -> {
@@ -104,8 +105,8 @@ public final class RemnantCommands {
                     List<? extends RemnantEntity> entities = world.getEntitiesByType(RemnantEntities.REMNANT, entity -> true);
                     entities.forEach(RemnantEntity::discard);
                     int removed = entities.size();
-                    context.getSource().sendFeedback(() -> Text.literal(
-                        "Removed " + removed + " Remnant entit" + (removed == 1 ? "y" : "ies") + " from this dimension."
+                    context.getSource().sendFeedback(() -> Text.translatable(
+                        "command.null_remnant.despawned", removed
                     ), true);
                     return Command.SINGLE_SUCCESS;
                 }))
