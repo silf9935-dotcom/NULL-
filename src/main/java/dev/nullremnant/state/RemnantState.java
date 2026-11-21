@@ -8,7 +8,10 @@ public final class RemnantState extends PersistentState {
     private long lastStalker = -1, lastAnomaly = -1, lastHorror = -1;
     private long lastEvent = -1, lastSleep = -1;
     private boolean nightmareSeen, finaleStarted, memoryAnchorSet, memoryEchoPlaced, doorEchoPlaced;
-    private int memoryX, memoryY, memoryZ, doorInteractions, doorRepeatCount, doorX, doorY, doorZ;\n    private int lastAreaX, lastAreaZ, rememberedAreaX, rememberedAreaZ, areaRevisits;\n    private boolean areaInitialized, rememberedAreaSet;\n    private long lastAreaEcho = -1;
+    private int memoryX, memoryY, memoryZ, doorInteractions, doorRepeatCount, doorX, doorY, doorZ;
+    private int lastAreaX, lastAreaZ, rememberedAreaX, rememberedAreaZ, areaRevisits;
+    private boolean areaInitialized, rememberedAreaSet;
+    private long lastAreaEcho = -1;
 
     public static RemnantState load(NbtCompound n) {
         RemnantState s = new RemnantState();
@@ -33,7 +36,11 @@ public final class RemnantState extends PersistentState {
         s.doorEchoPlaced = n.getBoolean("doorEchoPlaced");
         s.lastStalker = n.getLong("lastStalker");
         s.lastAnomaly = n.getLong("lastAnomaly");
-        s.lastHorror = n.getLong("lastHorror");\n        s.lastAreaX = n.getInt("lastAreaX"); s.lastAreaZ = n.getInt("lastAreaZ");\n        s.rememberedAreaX = n.getInt("rememberedAreaX"); s.rememberedAreaZ = n.getInt("rememberedAreaZ");\n        s.areaRevisits = n.getInt("areaRevisits"); s.areaInitialized = n.getBoolean("areaInitialized");\n        s.rememberedAreaSet = n.getBoolean("rememberedAreaSet"); s.lastAreaEcho = n.getLong("lastAreaEcho");
+        s.lastHorror = n.getLong("lastHorror");
+        s.lastAreaX = n.getInt("lastAreaX"); s.lastAreaZ = n.getInt("lastAreaZ");
+        s.rememberedAreaX = n.getInt("rememberedAreaX"); s.rememberedAreaZ = n.getInt("rememberedAreaZ");
+        s.areaRevisits = n.getInt("areaRevisits"); s.areaInitialized = n.getBoolean("areaInitialized");
+        s.rememberedAreaSet = n.getBoolean("rememberedAreaSet"); s.lastAreaEcho = n.getLong("lastAreaEcho");
         return s;
     }
 
@@ -60,7 +67,11 @@ public final class RemnantState extends PersistentState {
         n.putBoolean("doorEchoPlaced", doorEchoPlaced);
         n.putLong("lastStalker", lastStalker);
         n.putLong("lastAnomaly", lastAnomaly);
-        n.putLong("lastHorror", lastHorror);\n        n.putInt("lastAreaX", lastAreaX); n.putInt("lastAreaZ", lastAreaZ);\n        n.putInt("rememberedAreaX", rememberedAreaX); n.putInt("rememberedAreaZ", rememberedAreaZ);\n        n.putInt("areaRevisits", areaRevisits); n.putBoolean("areaInitialized", areaInitialized);\n        n.putBoolean("rememberedAreaSet", rememberedAreaSet); n.putLong("lastAreaEcho", lastAreaEcho);
+        n.putLong("lastHorror", lastHorror);
+        n.putInt("lastAreaX", lastAreaX); n.putInt("lastAreaZ", lastAreaZ);
+        n.putInt("rememberedAreaX", rememberedAreaX); n.putInt("rememberedAreaZ", rememberedAreaZ);
+        n.putInt("areaRevisits", areaRevisits); n.putBoolean("areaInitialized", areaInitialized);
+        n.putBoolean("rememberedAreaSet", rememberedAreaSet); n.putLong("lastAreaEcho", lastAreaEcho);
         return n;
     }
 
@@ -81,11 +92,17 @@ public final class RemnantState extends PersistentState {
     public int memoryX() { return memoryX; }
     public int memoryY() { return memoryY; }
     public int memoryZ() { return memoryZ; }
-    public int doorInteractions() { return doorInteractions; }\n    public int doorRepeatCount() { return doorRepeatCount; }
+    public int doorInteractions() { return doorInteractions; }
+    public int doorRepeatCount() { return doorRepeatCount; }
     public int doorX() { return doorX; }
     public int doorY() { return doorY; }
     public int doorZ() { return doorZ; }
-    public boolean doorEchoPlaced() { return doorEchoPlaced; }\n    public int areaRevisits() { return areaRevisits; }\n    public int rememberedAreaX() { return rememberedAreaX; }\n    public int rememberedAreaZ() { return rememberedAreaZ; }\n    public boolean rememberedAreaSet() { return rememberedAreaSet; }\n    public long lastAreaEcho() { return lastAreaEcho; }
+    public boolean doorEchoPlaced() { return doorEchoPlaced; }
+    public int areaRevisits() { return areaRevisits; }
+    public int rememberedAreaX() { return rememberedAreaX; }
+    public int rememberedAreaZ() { return rememberedAreaZ; }
+    public boolean rememberedAreaSet() { return rememberedAreaSet; }
+    public long lastAreaEcho() { return lastAreaEcho; }
 
     public void day(int v) { day = v; markDirty(); }
     public void stage(int v) { stage = v; markDirty(); }
@@ -105,7 +122,10 @@ public final class RemnantState extends PersistentState {
     }
     public void memoryEchoPlaced(boolean v) { memoryEchoPlaced = v; markDirty(); }
     public void recordDoor(int x, int y, int z) {
-        doorInteractions++;\n        if (doorX == x && doorY == y && doorZ == z) doorRepeatCount++;\n        else doorRepeatCount = 1;\n        doorX = x; doorY = y; doorZ = z; markDirty();
+        doorInteractions++;
+        if (doorX == x && doorY == y && doorZ == z) doorRepeatCount++;
+        else doorRepeatCount = 1;
+        doorX = x; doorY = y; doorZ = z; markDirty();
     }
     public void doorEchoPlaced(boolean v) { doorEchoPlaced = v; markDirty(); }
 }
