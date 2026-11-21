@@ -94,5 +94,10 @@
   "command.null_remnant.despawned_one": "Удалена сущность Остатка из этого измерения: %s.",
   "command.null_remnant.despawned_many": "Удалено сущностей Остатка из этого измерения: %s.",
   "item.null_remnant.remnant_spawn_egg": "Яйцо призыва Остатка",
-  "itemGroup.null_remnant": "NULL: Остаток"
+  "itemGroup.null_remnant": "NULL: Остаток",
+  "sound.null_remnant.remnant_ambient": "Статический шум Остатка",
+  "sound.null_remnant.remnant_hurt": "Сбой Остатка",
+  "sound.null_remnant.remnant_death": "Остаток распадается",
+  "sound.null_remnant.remnant_presence": "Рядом искажённый сигнал",
+  "sound.null_remnant.remnant_glitch": "Разрыв реальности"
 }
