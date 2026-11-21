@@ -33,12 +33,12 @@ public final class MemorySystem {
                     state.recordDoor(hit.getBlockPos().getX(), hit.getBlockPos().getY(), hit.getBlockPos().getZ());
                     if (state.stage() >= 2 && state.doorRepeatCount() >= 4 && (state.doorRepeatCount() == 4 || state.doorRepeatCount() % 3 == 0)) {
                         int visits = state.doorRepeatCount();
-                        String echo = visits >= 9 && state.stage() >= 4
-                            ? "§4This door has become part of the pattern."
+                        String echoKey = visits >= 9 && state.stage() >= 4
+                            ? "memory.null_remnant.door_pattern"
                             : visits >= 6 && state.stage() >= 3
-                                ? "§8You remember opening this. It remembers you."
-                                : "§8The sound of the door lingers longer than it should.";
-                        serverPlayer.sendMessage(Text.literal(echo), false);
+                                ? "memory.null_remnant.door_remembers"
+                                : "memory.null_remnant.door_sound";
+                        serverPlayer.sendMessage(Text.translatable(echoKey), false);
                     }
                 }
             }
@@ -59,22 +59,25 @@ public final class MemorySystem {
             if (count > 0 && count % 128 == 0 && memory.stage() >= 2) {
                 String[] lines = memory.stage() >= 4
                     ? new String[] {
-                        "§4Every block removed makes the shape clearer.",
-                        "§8It is learning what you leave behind.",
-                        "§7Your hands are teaching it how to build."
+                        "memory.null_remnant.blocks_shape",
+                        "memory.null_remnant.learns_remains",
+                        "memory.null_remnant.hands_build"
                     }
                     : memory.stage() >= 3
                         ? new String[] {
-                            "§8You hear the same sound twice.",
-                            "§7Something is learning the rhythm of your hands.",
-                            "§8The world remembers what you remove."
+                            "memory.null_remnant.sound_twice",
+                            "memory.null_remnant.learns_rhythm",
+                            "memory.null_remnant.world_remembers"
                         }
                         : new String[] {
-                            "§7A familiar sound follows your next movement.",
-                            "§8The world remembers what you remove.",
-                            "§7Something is learning the rhythm of your hands."
+                            "memory.null_remnant.familiar_sound",
+                            "memory.null_remnant.world_remembers",
+                            "memory.null_remnant.learns_rhythm"
                         };
-                serverPlayer.sendMessage(Text.literal(lines[server.getRandom().nextInt(lines.length)]), false);
+                serverPlayer.sendMessage(
+                    Text.translatable(lines[server.getRandom().nextInt(lines.length)]),
+                    false
+                );
             }
             if (count > 0 && count % 256 == 0) memory.memoryAnchor(serverPlayer.getBlockX(), serverPlayer.getBlockY(), serverPlayer.getBlockZ());
         });
@@ -158,9 +161,9 @@ public final class MemorySystem {
                     state.fear(1);
                     state.awareness(1);
                     state.startShadow(presence.getX(), presence.getY(), presence.getZ(), watched.getUuid().toString());
-                    watched.sendMessage(Text.literal(state.stage() >= 4
-                        ? "§8Something was standing behind you."
-                        : "§7You feel watched."), true);
+                    watched.sendMessage(Text.translatable(state.stage() >= 4
+                        ? "memory.null_remnant.presence_finale"
+                        : "memory.null_remnant.presence"), true);
                     state.lastStalker(world.getTime());
                 }
                 }
@@ -172,9 +175,9 @@ public final class MemorySystem {
             state.sampleArea(sampler.getBlockX() >> 4, sampler.getBlockZ() >> 4);
             if (state.stage() >= 3 && state.areaRevisits() >= 3 && state.areaRevisits() % 3 == 0
                     && (state.lastAreaEcho() < 0 || world.getTime() - state.lastAreaEcho() >= 24000L)) {
-                sampler.sendMessage(Text.literal(state.stage() >= 4
-                    ? "§4You returned to the place it kept."
-                    : "§8This place feels remembered."), false);
+                sampler.sendMessage(Text.translatable(state.stage() >= 4
+                    ? "memory.null_remnant.returned_finale"
+                    : "memory.null_remnant.returned"), false);
                 state.fear(1);
                 state.awareness(1);
                 state.lastAreaEcho(world.getTime());
@@ -186,7 +189,9 @@ public final class MemorySystem {
                 if (world.isChunkLoaded(echoSign) && world.getBlockState(echoSign).isAir() && world.getBlockState(echoSign.down()).isSolid()) {
                     world.setBlockState(echoSign, Blocks.OAK_SIGN.getDefaultState());
                     if (world.getBlockEntity(echoSign) instanceof SignBlockEntity sign) {
-                        sign.changeText(text -> text.withMessage(0, Text.literal("It kept this place.")).withMessage(1, Text.literal("You came back.")), true);
+                        sign.changeText(text -> text
+                            .withMessage(0, Text.translatable("sign.null_remnant.kept_place"))
+                            .withMessage(1, Text.translatable("sign.null_remnant.you_returned")), true);
                         sign.markDirty();
                         world.updateListeners(echoSign, world.getBlockState(echoSign), world.getBlockState(echoSign), 3);
                         state.areaEchoPlaced(true);
@@ -206,9 +211,15 @@ public final class MemorySystem {
                 if (world.isChunkLoaded(echo) && world.getBlockState(echo).isAir() && world.getBlockState(echo.down()).isSolid()) {
                     world.setBlockState(echo, Blocks.OAK_SIGN.getDefaultState());
                     if (world.getBlockEntity(echo) instanceof SignBlockEntity sign) {
-                        String firstLine = state.stage() >= 4 ? "It learned the sound." : "You opened this.";
-                        String secondLine = state.stage() >= 4 ? "It knows the way." : "It was listening.";
-                        sign.changeText(text -> text.withMessage(0, Text.literal(firstLine)).withMessage(1, Text.literal(secondLine)), true);
+                        String firstLine = state.stage() >= 4
+                            ? "sign.null_remnant.learned_sound"
+                            : "sign.null_remnant.you_opened";
+                        String secondLine = state.stage() >= 4
+                            ? "sign.null_remnant.knows_way"
+                            : "sign.null_remnant.listening";
+                        sign.changeText(text -> text
+                            .withMessage(0, Text.translatable(firstLine))
+                            .withMessage(1, Text.translatable(secondLine)), true);
                         sign.markDirty();
                         world.updateListeners(echo, world.getBlockState(echo), world.getBlockState(echo), 3);
                         state.doorEchoPlaced(true);
@@ -235,7 +246,7 @@ public final class MemorySystem {
                         && mimicState.isSolidBlock(world, target) && mimicState.getFluidState().isEmpty()) {
                     if (world.setBlockState(target, mimicState)) {
                         state.buildEchoPlaced(true);
-                        player.sendMessage(Text.literal("§4Something rebuilt a piece of what you removed."), false);
+                        player.sendMessage(Text.translatable("memory.null_remnant.rebuilt"), false);
                     }
                 }
                 break;
@@ -251,13 +262,21 @@ public final class MemorySystem {
             if (world.isChunkLoaded(place) && world.getBlockState(place).isAir() && world.getBlockState(place.down()).isSolid()) {
                 world.setBlockState(place, Blocks.OAK_SIGN.getDefaultState());
                 if (world.getBlockEntity(place) instanceof SignBlockEntity sign) {
-                    String firstLine = state.stage() >= 4 ? "It learned your hands." : "You have been here before.";
-                    String secondLine = state.stage() >= 4 ? "It can build now." : "It remembers.";
-                    sign.changeText(text -> text.withMessage(0, Text.literal(firstLine)).withMessage(1, Text.literal(secondLine)), true);
+                    String firstLine = state.stage() >= 4
+                        ? "sign.null_remnant.learned_hands"
+                        : "sign.null_remnant.been_here";
+                    String secondLine = state.stage() >= 4
+                        ? "sign.null_remnant.can_build"
+                        : "sign.null_remnant.remembers";
+                    sign.changeText(text -> text
+                        .withMessage(0, Text.translatable(firstLine))
+                        .withMessage(1, Text.translatable(secondLine)), true);
                     sign.markDirty();
                     world.updateListeners(place, world.getBlockState(place), world.getBlockState(place), 3);
                     state.memoryEchoPlaced(true);
-                    player.sendMessage(Text.literal(state.stage() >= 4 ? "§4It has changed what it remembers." : "§8A memory has returned to this place."), false);
+                    player.sendMessage(Text.translatable(state.stage() >= 4
+                        ? "memory.null_remnant.memory_changed"
+                        : "memory.null_remnant.memory_returned"), false);
                 }
             }
             return;
