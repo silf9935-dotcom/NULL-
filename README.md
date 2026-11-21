@@ -6,10 +6,10 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Fabric entrypoint and per-world persistent state.
 - Five escalation stages with day thresholds: 0–2, 3–9, 10–14, 15–20, 21+.
 - Narrative event pools: whispers, messages, lore signs, bedrock-cross anomaly, sleep interruption.
-- Horror director and rare environment anomaly hooks.
+- Horror director and rare environment anomaly hooks with config-aware chance scaling and player-target selection; directors avoid stacking a second message on the regular narrative event tick.
 - Registered Remnant hostile entity using a temporary vanilla zombie appearance, custom health/speed/damage, target and wander goals, pursuit, gaze reaction, retreat teleport, and despawn.
 - Stalker director can spawn the entity at a distance beginning at stage 2.
-- Player block-break activity contributes to an in-world memory/awareness counter and can produce rare stage-gated narrative feedback.
+- Player block-break activity contributes to an in-world memory/awareness counter and can produce rare stage-gated narrative feedback. Narrative echoes use the actual selected player's name.
 - At stage 3+, a persistent memory anchor may produce a sign echo when the player revisits that location.
 - First sleep interruption includes a unique nightmare hint; later interruptions escalate at higher stages, with a subtle vanilla sound cue.
 - Stalker appearance and nightmare cues use vanilla Enderman audio as a temporary sound placeholder.
