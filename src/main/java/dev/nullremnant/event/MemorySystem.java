@@ -107,7 +107,7 @@ public final class MemorySystem {
                 BlockPos presence = surface.up();
                 if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()
                         && world.getBlockState(presence.up()).isAir() && world.getBlockState(surface).isSolid()
-                        && world.getLightLevel(presence) <= 7 && watched.getBlockPos().isWithinDistance(presence, 5.0) == false) {
+                        && world.getLightLevel(presence) <= 7 && !watched.getBlockPos().isWithinDistance(presence, 5.0)) {
                     // Keep the apparition purely atmospheric: no collision, damage, or block changes.
                     double px = presence.getX() + 0.5;
                     double py = presence.getY() + 0.15;
