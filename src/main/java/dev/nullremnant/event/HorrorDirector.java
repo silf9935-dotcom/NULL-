@@ -15,9 +15,8 @@ public final class HorrorDirector {
         RemnantState state = StateAccess.get(world);
         int stage = state.stage();
         long now = world.getTime();
-        if (stage < 1 || now - state.lastHorror() < 1200L) return;
+        if (stage < 1 || now - state.lastHorror() < 1200L || state.lastEvent() == now) return;
         state.lastHorror(now);
-        if (state.lastEvent() == now) return;
 
         int chance = new int[] {0, 8, 18, 30, 42}[Math.min(stage, 4)];
         int scaledChance = chance * RemnantConfig.eventFrequency / 100;
