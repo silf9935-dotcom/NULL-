@@ -213,9 +213,17 @@ public class RemnantEntity extends ZombieEntity {
     }
 
     private static boolean looksAt(PlayerEntity player, LivingEntity target) {
+        Vec3d from = player.getCameraPosVec(1.0f);
+        Vec3d to = target.getPos().add(0.0, target.getStandingEyeHeight() * 0.8, 0.0);
         Vec3d look = player.getRotationVec(1.0f).normalize();
-        Vec3d toward = target.getPos().subtract(player.getPos()).normalize();
-        return look.dotProduct(toward) > 0.94;
+        Vec3d toward = to.subtract(from).normalize();
+        if (look.dotProduct(toward) <= 0.94) return false;
+
+        RaycastContext visibility = new RaycastContext(
+            from, to, RaycastContext.ShapeType.COLLIDER,
+            RaycastContext.FluidHandling.NONE, player
+        );
+        return player.getWorld().raycast(visibility).getType() == HitResult.Type.MISS;
     }
 
     @Override
