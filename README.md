@@ -16,6 +16,8 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Stage 5 transition records a one-time finale flag and emits a finale introduction.
 - Custom humanoid model with idle/walk motion and client renderer (texture currently borrowed from vanilla zombie; model UVs are prototype quality).
 - Nearby entity whisper HUD cue, shown only while the Remnant is close.
+- Client-side proximity audio cue with a restrained cooldown.
+- Door interaction memory; at later stages, revisiting a remembered door may produce a one-time sign echo.
 - Commands: `/remnant lore`; operator-only `/remnant status`, `/remnant spawn`, and `/remnant reload`.
 - English/Russian language files, event catalog and lore archive.
 - JSON configuration file generated in the Minecraft config folder: master enable, nightmare toggle, subtle anomaly toggle, event/stalker frequency sliders (0–200%).
