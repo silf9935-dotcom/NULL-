@@ -41,7 +41,7 @@ public final class RemnantState extends PersistentState {
         s.doorZ = n.getInt("doorZ");
         s.doorEchoPlaced = n.getBoolean("doorEchoPlaced");
         s.lastStalker = n.getLong("lastStalker");
-        s.lastEntityStalker = n.getLong("lastEntityStalker");
+        s.lastEntityStalker = n.contains("lastEntityStalker") ? n.getLong("lastEntityStalker") : -1L;
         s.lastAnomaly = n.getLong("lastAnomaly");
         s.lastHorror = n.getLong("lastHorror");
         s.lastAreaX = n.getInt("lastAreaX"); s.lastAreaZ = n.getInt("lastAreaZ");
