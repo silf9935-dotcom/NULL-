@@ -85,6 +85,19 @@ public final class MemorySystem {
                 state.awareness(1);
                 state.lastAreaEcho(world.getTime());
             }
+            if (state.stage() >= 4 && state.areaRevisits() >= 3 && !state.areaEchoPlaced()) {
+                BlockPos areaCenter = new BlockPos(state.rememberedAreaX() * 16 + 8, 0, state.rememberedAreaZ() * 16 + 8);
+                BlockPos echoSign = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, areaCenter);
+                if (world.isChunkLoaded(echoSign) && world.getBlockState(echoSign).isAir() && world.getBlockState(echoSign.down()).isSolid()) {
+                    world.setBlockState(echoSign, Blocks.OAK_SIGN.getDefaultState());
+                    if (world.getBlockEntity(echoSign) instanceof SignBlockEntity sign) {
+                        sign.changeText(text -> text.withMessage(0, Text.literal("It kept this place.")).withMessage(1, Text.literal("You came back.")), true);
+                        sign.markDirty();
+                        world.updateListeners(echoSign, world.getBlockState(echoSign), world.getBlockState(echoSign), 3);
+                        state.areaEchoPlaced(true);
+                    }
+                }
+            }
         }
 
         if (state.stage() >= 3 && state.doorInteractions() >= 8 && !state.doorEchoPlaced()) {
