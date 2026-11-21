@@ -96,13 +96,26 @@ public final class MemorySystem {
         RemnantState state = StateAccess.get(world);
 
         // A short-lived shadow advances toward a player over several world ticks, then vanishes.
-        if (state.shadowActive() && world.getTime() % 200L == 0) {
-            ServerPlayerEntity target = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
+        if (state.shadowActive()) {
+            ServerPlayerEntity target = world.getPlayers().stream()
+                .filter(player -> player.getUuid().toString().equals(state.shadowTargetId()))
+                .findFirst().orElse(null);
             BlockPos shadow = new BlockPos(state.shadowX(), state.shadowY(), state.shadowZ());
-            if (state.shadowSteps() >= 3 || !world.isChunkLoaded(shadow) || !world.getBlockState(shadow).isAir()) {
+            if (target == null || state.shadowSteps() >= 3 || !world.isChunkLoaded(shadow) || !world.getBlockState(shadow).isAir()) {
                 world.spawnParticles(ParticleTypes.LARGE_SMOKE, shadow.getX() + 0.5, shadow.getY() + 0.2, shadow.getZ() + 0.5, 5, 0.2, 0.3, 0.2, 0.01);
                 state.stopShadow();
             } else {
+                double yaw = target.getYaw() * Math.PI / 180.0;
+                double forwardX = Math.sin(yaw);
+                double forwardZ = Math.cos(yaw);
+                double viewX = shadow.getX() + 0.5 - target.getX();
+                double viewZ = shadow.getZ() + 0.5 - target.getZ();
+                double viewLength = Math.sqrt(viewX * viewX + viewZ * viewZ);
+                boolean inFront = viewLength > 0.0 && (forwardX * viewX + forwardZ * viewZ) / viewLength > 0.45;
+                if (inFront) {
+                    world.spawnParticles(ParticleTypes.SMOKE, shadow.getX() + 0.5, shadow.getY() + 0.1, shadow.getZ() + 0.5, 8, 0.2, 0.25, 0.2, 0.01);
+                    state.stopShadow();
+                } else {
                 int dx = Integer.compare(target.getBlockX(), shadow.getX());
                 int dz = Integer.compare(target.getBlockZ(), shadow.getZ());
                 BlockPos next = shadow.add(dx, 0, dz);
@@ -115,6 +128,7 @@ public final class MemorySystem {
                     world.spawnParticles(ParticleTypes.SMOKE, next.getX() + 0.5, next.getY() + 0.1, next.getZ() + 0.5, 6, 0.2, 0.25, 0.2, 0.01);
                 } else {
                     state.stopShadow();
+                }
                 }
             }
         }
@@ -141,7 +155,7 @@ public final class MemorySystem {
                     world.playSound(null, presence, SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 0.85f, 0.55f);
                     state.fear(1);
                     state.awareness(1);
-                    state.startShadow(presence.getX(), presence.getY(), presence.getZ());
+                    state.startShadow(presence.getX(), presence.getY(), presence.getZ(), watched.getUuid().toString());
                     watched.sendMessage(Text.literal(state.stage() >= 4
                         ? "§8Something was standing behind you."
                         : "§7You feel watched."), true);
