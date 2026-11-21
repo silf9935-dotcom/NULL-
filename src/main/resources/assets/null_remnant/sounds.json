@@ -1,1 +1,42 @@
-{}
+{
+  "remnant_ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.heartbeat"
+      }
+    ],
+    "subtitle": "sound.null_remnant.remnant_ambient"
+  },
+  "remnant_hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.phantom.swoop"
+      }
+    ],
+    "subtitle": "sound.null_remnant.remnant_hurt"
+  },
+  "remnant_death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.sculk_shrieker.shriek"
+      }
+    ],
+    "subtitle": "sound.null_remnant.remnant_death"
+  },
+  "remnant_presence": {
+    "sounds": [
+      {
+        "name": "minecraft:block.sculk_sensor.clicking"
+      }
+    ],
+    "subtitle": "sound.null_remnant.remnant_presence"
+  },
+  "remnant_glitch": {
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.chime"
+      }
+    ],
+    "subtitle": "sound.null_remnant.remnant_glitch"
+  }
+}
