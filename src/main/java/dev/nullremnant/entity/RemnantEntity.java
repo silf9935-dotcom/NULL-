@@ -2,6 +2,7 @@ package dev.nullremnant.entity;
 
 import dev.nullremnant.state.StateAccess;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
@@ -22,6 +23,7 @@ import java.util.EnumSet;
 
 public class RemnantEntity extends ZombieEntity {
     private int stareTicks;
+    private int lifetimeTicks;
     private int retreatTicks;
     private double retreatX;
     private double retreatY;
@@ -106,6 +108,7 @@ public class RemnantEntity extends ZombieEntity {
     @Override
     public void tick() {
         super.tick();
+        lifetimeTicks++;
         LivingEntity target = getTarget();
         if (target instanceof PlayerEntity player && player.isAlive()) {
             if (squaredDistanceTo(player) < 256.0 && looksAt(player, this)) {
@@ -127,11 +130,34 @@ public class RemnantEntity extends ZombieEntity {
 
         if (retreatTicks > 0) {
             retreatTicks--;
-            if (tickCount % 20 == 0) retreatToCover();
+            if (lifetimeTicks % 20 == 0) retreatToCover();
             if (retreatTicks == 0) setInvisible(false);
         }
 
-        if (tickCount > 2400 && getTarget() == null && retreatTicks <= 0) discard();
+        if (lifetimeTicks > 2400 && getTarget() == null && retreatTicks <= 0) discard();
+    }
+
+    @Override
+    protected void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("RemnantStareTicks", stareTicks);
+        nbt.putInt("RemnantRetreatTicks", retreatTicks);
+        nbt.putDouble("RemnantRetreatX", retreatX);
+        nbt.putDouble("RemnantRetreatY", retreatY);
+        nbt.putDouble("RemnantRetreatZ", retreatZ);
+        nbt.putInt("RemnantLifetimeTicks", lifetimeTicks);
+    }
+
+    @Override
+    protected void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        stareTicks = nbt.getInt("RemnantStareTicks");
+        retreatTicks = nbt.getInt("RemnantRetreatTicks");
+        retreatX = nbt.getDouble("RemnantRetreatX");
+        retreatY = nbt.getDouble("RemnantRetreatY");
+        retreatZ = nbt.getDouble("RemnantRetreatZ");
+        lifetimeTicks = nbt.getInt("RemnantLifetimeTicks");
+        setInvisible(retreatTicks > 0);
     }
 
     private void retreatToCover() {
