@@ -156,6 +156,6 @@ public final class RemnantState extends PersistentState {
     }
     public void lastAreaEcho(long v) { lastAreaEcho = v; markDirty(); }
     public void areaEchoPlaced(boolean v) { areaEchoPlaced = v; markDirty(); }
-    public void rememberBlock(String id, int x, int y, int z) { rememberedBlockId = id; rememberedBlockX = x; rememberedBlockY = y; rememberedBlockZ = z; buildEchoPlaced = false; markDirty(); }
+    public void rememberBlock(String id, int x, int y, int z) { rememberedBlockId = id; rememberedBlockX = x; rememberedBlockY = y; rememberedBlockZ = z; markDirty(); }
     public void buildEchoPlaced(boolean v) { buildEchoPlaced = v; markDirty(); }
 }
