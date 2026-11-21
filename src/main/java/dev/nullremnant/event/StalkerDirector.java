@@ -44,7 +44,7 @@ public final class StalkerDirector {
         state.fear(3);
         world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ENDERMAN_STARE, SoundCategory.HOSTILE,
             0.28f, 0.62f + world.getRandom().nextFloat() * 0.18f);
-        player.sendMessage(Text.literal("§8You feel something watching from behind cover."), false);
+        player.sendMessage(Text.translatable("stalker.null_remnant.watched"), false);
     }
 
     private static BlockPos findHiddenSpawn(ServerWorld world, ServerPlayerEntity player) {
