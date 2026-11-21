@@ -25,8 +25,12 @@ public final class StalkerDirector {
         if (state.stage() < 2 || (state.lastEntityStalker() >= 0 && now - state.lastEntityStalker() < 2400L)) return;
         if (!world.getEntitiesByType(RemnantEntities.REMNANT, entity -> entity.isAlive()).isEmpty()) return;
 
-        int chance = state.stage() >= 4 ? 22 : state.stage() == 3 ? 14 : 6;
-        if (world.getRandom().nextInt(100) >= chance * RemnantConfig.stalkerFrequency / 100) return;
+        int baseChance = state.stage() >= 4 ? 22 : state.stage() == 3 ? 14 : 6;
+        int pressure = Math.min(12,
+            state.awareness() / 40 + state.fear() / 30 + state.intrusion() / 500);
+        int chance = Math.min(100,
+            (baseChance + pressure) * RemnantConfig.stalkerFrequency / 100);
+        if (world.getRandom().nextInt(100) >= chance) return;
 
         ServerPlayerEntity player = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
         BlockPos spawnPos = findHiddenSpawn(world, player);
