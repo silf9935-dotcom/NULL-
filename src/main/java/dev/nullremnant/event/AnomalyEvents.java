@@ -1,4 +1,5 @@
 package dev.nullremnant.event;
+import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.state.RemnantState;
 import dev.nullremnant.state.StateAccess;
 import net.minecraft.block.Blocks;
@@ -9,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 public final class AnomalyEvents {
  private AnomalyEvents(){}
  public static void tryTrigger(ServerWorld world,ServerPlayerEntity player){
-  if(world.getTime()%1200L!=0)return;RemnantState state=StateAccess.get(world);int stage=state.stage();if(stage<2)return;
+  if(!RemnantConfig.enabled||!RemnantConfig.subtleAnomalies||world.getTime()%1200L!=0)return;RemnantState state=StateAccess.get(world);int stage=state.stage();if(stage<2)return;
   int chance=stage>=4?12:stage==3?7:3;if(world.getRandom().nextInt(100)>=chance)return;
   switch(world.getRandom().nextInt(4)){
    case 0->player.sendMessage(Text.literal("§8A shape disappears at the edge of your vision."),false);
