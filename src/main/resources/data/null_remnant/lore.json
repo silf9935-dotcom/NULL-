@@ -1,0 +1,9 @@
+{
+ "entries": [
+  {"id":"first_trace","stage":0,"text":"The world is quiet. Nothing here should be able to remember."},
+  {"id":"observation","stage":1,"text":"A shape stood past the trees. It was gone when approached."},
+  {"id":"imitation","stage":2,"text":"The signs are written in places you know. The handwriting is almost yours."},
+  {"id":"reconstruction","stage":3,"text":"It has begun rebuilding things you made. The proportions are wrong."},
+  {"id":"ownership","stage":4,"text":"It does not want you gone. It wants to be the one who comes back."}
+ ]
+}
