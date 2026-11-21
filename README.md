@@ -12,11 +12,11 @@ The world advances through five narrative stages. The internal stage values are 
 
 | Player-facing stage | Internal value | World age | Behavior |
 | --- | ---: | --- | --- |
-| Quiet | 0 | Days 0–2 | Sparse environmental hints; no entity stalking. |
-| Awakening | 1 | Days 3–9 | Distant sounds, first traces, and early memory feedback. |
-| Aggression | 2 | Days 10–14 | The Remnant can begin appearing behind environmental cover; it stalks rather than attacks. |
-| Fracture | 3 | Days 15–20 | More frequent anomalies, remembered places, and non-damaging shadow manifestations. |
-| Finale | 4 | Day 21 onward | The Remnant becomes more persistent and can attack; world-memory echoes intensify. |
+| 1 — Quiet | 0 | Days 0–2 | Sparse environmental hints; no entity stalking. |
+| 2 — Awakening | 1 | Days 3–9 | Distant sounds, first traces, and early memory feedback. |
+| 3 — Aggression | 2 | Days 10–14 | The Remnant can begin appearing behind environmental cover; it stalks rather than attacks. |
+| 4 — Fracture | 3 | Days 15–20 | More frequent anomalies, remembered places, and non-damaging shadow manifestations. |
+| 5 — Finale | 4 | Day 21 onward | The Remnant becomes more persistent and can attack; world-memory echoes intensify. |
 
 Progression is based on the world's age in ticks, not the player's sleeping count. Sleeping can trigger a separate nightmare interruption, but does not skip progression days.
 
@@ -87,10 +87,10 @@ The GitHub Actions workflow runs gradle build on pushes to main and pull request
 
 - [ ] Launch a Fabric 1.20.1 client and verify the model and custom texture.
 - [ ] Create a new survival world and verify progression across all five stages.
-- [ ] Verify that stage 2 and 3 stalking does not deal damage.
+- [ ] Verify that Aggression (stage 3) and Fracture (stage 4) stalking does not deal damage.
 - [ ] Verify gaze detection, retreat, line-of-sight cover, reappearance, and eventual despawn.
 - [ ] Save and reload while the entity is retreating; verify it does not remain permanently invisible.
-- [ ] Verify that stage 4 enables melee behavior.
+- [ ] Verify that the Finale (stage 5) enables melee behavior.
 - [ ] Verify that signs and smoke events do not overwrite existing player blocks.
 - [ ] Verify that remembered blocks are reproduced only on safe, empty, supported positions.
 - [ ] Verify that world state and cooldowns persist across server restarts.
