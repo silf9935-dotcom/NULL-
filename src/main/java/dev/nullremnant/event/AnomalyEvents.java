@@ -15,7 +15,7 @@ public final class AnomalyEvents {
         RemnantState state = StateAccess.get(world);
         int stage = state.stage();
         long now = world.getTime();
-        if (stage < 2 || now - state.lastAnomaly() < 1200L) return;
+        if (stage < 2 || now - state.lastAnomaly() < 1200L || state.lastEvent() == now) return;
         state.lastAnomaly(now);
 
         int chance = stage >= 4 ? 12 : stage == 3 ? 7 : 3;
@@ -31,5 +31,6 @@ public final class AnomalyEvents {
         }
         state.awareness(1);
         state.fear(1);
+        state.lastEvent(now);
     }
 }
