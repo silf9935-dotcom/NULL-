@@ -8,8 +8,8 @@ public final class StateAccess {
 
     public static RemnantState get(ServerWorld world) {
         return world.getPersistentStateManager().getOrCreate(
-            RemnantState::new,
             RemnantState::load,
+            RemnantState::new,
             "null_remnant"
         );
     }
