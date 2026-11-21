@@ -18,6 +18,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.RaycastContext;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -164,13 +165,13 @@ public class RemnantEntity extends ZombieEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        stareTicks = nbt.getInt("RemnantStareTicks");
-        retreatTicks = nbt.getInt("RemnantRetreatTicks");
+        stareTicks = Math.max(0, Math.min(80, nbt.getInt("RemnantStareTicks")));
+        retreatTicks = Math.max(0, Math.min(100, nbt.getInt("RemnantRetreatTicks")));
         retreatX = nbt.getDouble("RemnantRetreatX");
         retreatY = nbt.getDouble("RemnantRetreatY");
         retreatZ = nbt.getDouble("RemnantRetreatZ");
-        lifetimeTicks = nbt.getInt("RemnantLifetimeTicks");
-        stalkPathCooldown = nbt.getInt("RemnantStalkPathCooldown");
+        lifetimeTicks = Math.max(0, nbt.getInt("RemnantLifetimeTicks"));
+        stalkPathCooldown = Math.max(0, Math.min(10, nbt.getInt("RemnantStalkPathCooldown")));
         setInvisible(retreatTicks > 0);
     }
 
@@ -191,10 +192,14 @@ public class RemnantEntity extends ZombieEntity {
             double angle = (i - 2.5) * 0.38;
             double dx = awayX * Math.cos(angle) - awayZ * Math.sin(angle);
             double dz = awayX * Math.sin(angle) + awayZ * Math.cos(angle);
-            BlockPos feet = BlockPos.ofFloored(getX() + dx * 6.0, getY(), getZ() + dz * 6.0);
+            BlockPos candidate = BlockPos.ofFloored(getX() + dx * 6.0, getY(), getZ() + dz * 6.0);
+            if (!world.isChunkLoaded(candidate)) continue;
+            BlockPos feet = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, candidate);
             if (!world.isChunkLoaded(feet) || !world.getBlockState(feet).isAir()
                     || !world.getBlockState(feet.up()).isAir()
                     || !world.getBlockState(feet.down()).isSolid()
+                    || !world.getBlockState(feet).getFluidState().isEmpty()
+                    || !world.getBlockState(feet.up()).getFluidState().isEmpty()
                     || world.getLightLevel(feet) > 7) continue;
             Vec3d fromPlayer = new Vec3d(retreatX, retreatY, retreatZ);
             Vec3d toShadow = new Vec3d(feet.getX() + 0.5, feet.getY() + 1.4, feet.getZ() + 0.5);
