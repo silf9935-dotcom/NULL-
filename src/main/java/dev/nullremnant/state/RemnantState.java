@@ -34,8 +34,8 @@ public final class RemnantState extends PersistentState {
         s.memoryX = n.getInt("memoryX");
         s.memoryY = n.getInt("memoryY");
         s.memoryZ = n.getInt("memoryZ");
-        s.doorInteractions = n.getInt("doorInteractions");
-        s.doorRepeatCount = n.getInt("doorRepeatCount");
+        s.doorInteractions = clampCounter(n.getInt("doorInteractions"));
+        s.doorRepeatCount = clampCounter(n.getInt("doorRepeatCount"));
         s.doorX = n.getInt("doorX");
         s.doorY = n.getInt("doorY");
         s.doorZ = n.getInt("doorZ");
@@ -46,10 +46,10 @@ public final class RemnantState extends PersistentState {
         s.lastHorror = n.getLong("lastHorror");
         s.lastAreaX = n.getInt("lastAreaX"); s.lastAreaZ = n.getInt("lastAreaZ");
         s.rememberedAreaX = n.getInt("rememberedAreaX"); s.rememberedAreaZ = n.getInt("rememberedAreaZ");
-        s.areaRevisits = n.getInt("areaRevisits"); s.areaInitialized = n.getBoolean("areaInitialized");
+        s.areaRevisits = clampCounter(n.getInt("areaRevisits")); s.areaInitialized = n.getBoolean("areaInitialized");
         s.rememberedAreaSet = n.getBoolean("rememberedAreaSet"); s.areaEchoPlaced = n.getBoolean("areaEchoPlaced"); s.lastAreaEcho = n.getLong("lastAreaEcho");
         s.shadowActive = n.getBoolean("shadowActive");
-        s.shadowX = n.getInt("shadowX"); s.shadowY = n.getInt("shadowY"); s.shadowZ = n.getInt("shadowZ"); s.shadowSteps = n.getInt("shadowSteps"); s.shadowTargetId = n.getString("shadowTargetId");
+        s.shadowX = n.getInt("shadowX"); s.shadowY = n.getInt("shadowY"); s.shadowZ = n.getInt("shadowZ"); s.shadowSteps = Math.max(0, Math.min(3, n.getInt("shadowSteps"))); s.shadowTargetId = n.getString("shadowTargetId");
         s.buildEchoPlaced = n.getBoolean("buildEchoPlaced");
         s.rememberedBlockId = n.getString("rememberedBlockId");
         s.rememberedBlockX = n.getInt("rememberedBlockX"); s.rememberedBlockY = n.getInt("rememberedBlockY"); s.rememberedBlockZ = n.getInt("rememberedBlockZ");
@@ -164,8 +164,8 @@ public final class RemnantState extends PersistentState {
     }
     public void memoryEchoPlaced(boolean v) { memoryEchoPlaced = v; markDirty(); }
     public void recordDoor(int x, int y, int z) {
-        doorInteractions++;
-        if (doorX == x && doorY == y && doorZ == z) doorRepeatCount++;
+        doorInteractions = addCounter(doorInteractions, 1);
+        if (doorX == x && doorY == y && doorZ == z) doorRepeatCount = addCounter(doorRepeatCount, 1);
         else doorRepeatCount = 1;
         doorX = x; doorY = y; doorZ = z; markDirty();
     }
@@ -176,8 +176,9 @@ public final class RemnantState extends PersistentState {
             areaInitialized = true; rememberedAreaSet = true; markDirty(); return;
         }
         if (x == lastAreaX && z == lastAreaZ) return;
-        if (x == rememberedAreaX && z == rememberedAreaZ) areaRevisits++;
-        else if (areaRevisits == 0) { rememberedAreaX = x; rememberedAreaZ = z; rememberedAreaSet = true; }
+        if (x == rememberedAreaX && z == rememberedAreaZ) {
+            areaRevisits = addCounter(areaRevisits, 1);
+        }
         lastAreaX = x; lastAreaZ = z; markDirty();
     }
     public void lastAreaEcho(long v) { lastAreaEcho = v; markDirty(); }
