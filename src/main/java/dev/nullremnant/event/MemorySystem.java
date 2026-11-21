@@ -142,10 +142,10 @@ public final class MemorySystem {
                 double angle = watched.getYaw() * Math.PI / 180.0;
                 double behindX = watched.getX() + Math.sin(angle) * -9.0;
                 double behindZ = watched.getZ() + Math.cos(angle) * -9.0;
-                BlockPos surface = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, BlockPos.ofFloored(behindX, watched.getY(), behindZ));
-                BlockPos presence = surface.up();
+                BlockPos presence = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING,
+                    BlockPos.ofFloored(behindX, watched.getY(), behindZ));
                 if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()
-                        && world.getBlockState(presence.up()).isAir() && world.getBlockState(surface).isSolid()
+                        && world.getBlockState(presence.up()).isAir() && world.getBlockState(presence.down()).isSolid()
                         && world.getLightLevel(presence) <= 7 && !watched.getBlockPos().isWithinDistance(presence, 5.0)) {
                     // Keep the apparition purely atmospheric: no collision, damage, or block changes.
                     double px = presence.getX() + 0.5;
