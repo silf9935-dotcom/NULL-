@@ -1,4 +1,5 @@
 package dev.nullremnant;
+import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.event.RemnantEvents;
 import dev.nullremnant.entity.RemnantEntities;
 import dev.nullremnant.command.RemnantCommands;
@@ -11,6 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 public final class RemnantMod implements ModInitializer {
  public static final String ID="null_remnant";public static final Logger LOGGER=LoggerFactory.getLogger(ID);
- public void onInitialize(){RemnantEntities.register();RemnantCommands.register();MemorySystem.register();LOGGER.info("NULL: The Remnant is awake.");ServerTickEvents.END_WORLD_TICK.register(RemnantEvents::tick);}
+ public void onInitialize(){RemnantConfig.load();RemnantEntities.register();RemnantCommands.register();MemorySystem.register();LOGGER.info("NULL: The Remnant is awake.");ServerTickEvents.END_WORLD_TICK.register(RemnantEvents::tick);}
  public static void tell(ServerWorld world,String text){world.getPlayers().forEach(p->p.sendMessage(Text.literal(text),false));}
 }
