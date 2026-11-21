@@ -18,7 +18,11 @@ The world advances through five narrative stages. The internal stage values are 
 | 4 — Fracture | 3 | Days 15–20 | More frequent anomalies, remembered places, and non-damaging shadow manifestations. |
 | 5 — Finale | 4 | Day 21 onward | The Remnant becomes more persistent and can attack; world-memory echoes intensify. |
 
-Progression is based on the world's age in ticks, not the player's sleeping count. Sleeping can trigger a separate nightmare interruption, but does not skip progression days.
+Progression is based on the world's total age in ticks, not the daylight clock. Sleeping can trigger a separate nightmare interruption, but does not skip progression days.
+
+### Adaptive world pressure
+
+The world keeps three persistent counters: **awareness**, **fear**, and **intrusion**. Breaking blocks raises awareness and intrusion; manifestations and stalking raise fear and awareness. These values gently increase the chance of later horror events and stalker appearances, within hard probability caps. They never accelerate the five age-based progression stages. The counters survive world saves and are bounded to prevent integer overflow.
 
 ### The Remnant
 
@@ -71,17 +75,30 @@ The file config/null_remnant.json is created on first launch.
 
 Use /remnant reload to reload the configuration without restarting the game. A value of 0 suppresses the corresponding random event director.
 
+## Install
+
+1. Install **Fabric Loader** for Minecraft Java 1.20.1.
+2. Install **Fabric API** for Minecraft 1.20.1.
+3. Open the repository's [GitHub Actions page](https://github.com/silf9935-dotcom/NULL-/actions).
+4. Open the latest successful **Build** workflow run on the main branch.
+5. Download the artifact named `null-remnant-fabric-1.20.1` and extract the archive.
+6. Put the mod JAR from the archive into your Minecraft `mods` folder.
+7. Start the Fabric 1.20.1 profile.
+
+Build artifacts are retained for 14 days. A fresh artifact is uploaded after each successful push to main.
+
 ## Build
 
-Requirements: Java 17, Gradle 8.6, Minecraft 1.20.1 mappings and Fabric dependencies declared in gradle.properties.
+Requirements: Java 17, Gradle 8.6, Minecraft 1.20.1 mappings and Fabric dependencies declared in `gradle.properties`.
 
 Run:
 
 ~~~sh
-gradle build
+python3 scripts/validate_resources.py
+gradle --no-daemon clean build
 ~~~
 
-The GitHub Actions workflow runs gradle build on pushes to main and pull requests targeting main. Check the Actions tab for the latest verified build result.
+The resource validator checks JSON syntax, the entity texture, translation-key parity, and all statically referenced narrative keys. GitHub Actions runs this validation and the Gradle build on pushes to main and pull requests targeting main. The compiled distributable JAR is uploaded as a workflow artifact after a successful main-branch build.
 
 ## Testing checklist
 
