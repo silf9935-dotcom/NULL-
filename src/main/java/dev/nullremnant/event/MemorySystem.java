@@ -142,8 +142,9 @@ public final class MemorySystem {
                 double angle = watched.getYaw() * Math.PI / 180.0;
                 double behindX = watched.getX() + Math.sin(angle) * -9.0;
                 double behindZ = watched.getZ() + Math.cos(angle) * -9.0;
-                BlockPos presence = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING,
-                    BlockPos.ofFloored(behindX, watched.getY(), behindZ));
+                BlockPos behindSample = BlockPos.ofFloored(behindX, watched.getY(), behindZ);
+                if (!world.isChunkLoaded(behindSample)) return;
+                BlockPos presence = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, behindSample);
                 if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()
                         && world.getBlockState(presence.up()).isAir() && world.getBlockState(presence.down()).isSolid()
                         && world.getLightLevel(presence) <= 7 && !watched.getBlockPos().isWithinDistance(presence, 5.0)) {
@@ -179,6 +180,7 @@ public final class MemorySystem {
             }
             if (state.stage() >= 4 && state.areaRevisits() >= 3 && !state.areaEchoPlaced()) {
                 BlockPos areaCenter = new BlockPos(state.rememberedAreaX() * 16 + 8, 0, state.rememberedAreaZ() * 16 + 8);
+                if (!world.isChunkLoaded(areaCenter)) return;
                 BlockPos echoSign = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, areaCenter);
                 if (world.isChunkLoaded(echoSign) && world.getBlockState(echoSign).isAir() && world.getBlockState(echoSign.down()).isSolid()) {
                     world.setBlockState(echoSign, Blocks.OAK_SIGN.getDefaultState());
@@ -196,7 +198,9 @@ public final class MemorySystem {
             BlockPos rememberedDoor = new BlockPos(state.doorX(), state.doorY(), state.doorZ());
             for (ServerPlayerEntity player : world.getPlayers()) {
                 if (!player.getBlockPos().isWithinDistance(rememberedDoor, 7.0)) continue;
-                BlockPos echo = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, rememberedDoor.add(2, 0, 1));
+                BlockPos echoSample = rememberedDoor.add(2, 0, 1);
+                if (!world.isChunkLoaded(echoSample)) continue;
+                BlockPos echo = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, echoSample);
                 if (world.isChunkLoaded(echo) && world.getBlockState(echo).isAir() && world.getBlockState(echo.down()).isSolid()) {
                     world.setBlockState(echo, Blocks.OAK_SIGN.getDefaultState());
                     if (world.getBlockEntity(echo) instanceof SignBlockEntity sign) {
@@ -221,7 +225,9 @@ public final class MemorySystem {
                 if (id == null) { state.buildEchoPlaced(true); break; }
                 var block = Registries.BLOCK.get(id);
                 var mimicState = block.getDefaultState();
-                BlockPos target = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, remembered.add(1, 0, 1));
+                BlockPos buildSample = remembered.add(1, 0, 1);
+                if (!world.isChunkLoaded(buildSample)) break;
+                BlockPos target = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, buildSample);
                 if (world.isChunkLoaded(target) && world.getBlockState(target).isAir()
                         && world.getBlockState(target.down()).isSolid()
                         && mimicState.isSolidBlock(world, target) && mimicState.getFluidState().isEmpty()) {
@@ -238,6 +244,7 @@ public final class MemorySystem {
         BlockPos anchor = new BlockPos(state.memoryX(), state.memoryY(), state.memoryZ());
         for (ServerPlayerEntity player : world.getPlayers()) {
             if (!player.getBlockPos().isWithinDistance(anchor, 6.0)) continue;
+            if (!world.isChunkLoaded(anchor)) return;
             BlockPos place = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, anchor);
             if (world.isChunkLoaded(place) && world.getBlockState(place).isAir() && world.getBlockState(place.down()).isSolid()) {
                 world.setBlockState(place, Blocks.OAK_SIGN.getDefaultState());
