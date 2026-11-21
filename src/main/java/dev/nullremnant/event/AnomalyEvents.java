@@ -23,12 +23,16 @@ public final class AnomalyEvents {
         if (world.getRandom().nextInt(100) >= scaledChance) return;
 
         ServerPlayerEntity recipient = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
-        switch (world.getRandom().nextInt(4)) {
-            case 0 -> recipient.sendMessage(Text.literal("§8A shape disappears at the edge of your vision."), false);
-            case 1 -> recipient.sendMessage(Text.literal("§7The cave sounds strangely distant."), false);
-            case 2 -> recipient.sendMessage(Text.literal("§8You notice something that was not there."), false);
-            default -> recipient.sendMessage(Text.literal("§7The ground looks different for a moment."), false);
-        }
+        String[] messages = {
+            "anomaly.null_remnant.shape",
+            "anomaly.null_remnant.cave",
+            "anomaly.null_remnant.appeared",
+            "anomaly.null_remnant.ground"
+        };
+        recipient.sendMessage(
+            Text.translatable(messages[world.getRandom().nextInt(messages.length)]),
+            false
+        );
         state.awareness(1);
         state.fear(1);
         state.lastEvent(now);
