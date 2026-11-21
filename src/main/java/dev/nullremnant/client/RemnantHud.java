@@ -1,6 +1,5 @@
 package dev.nullremnant.client;
 
-import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.entity.RemnantEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
@@ -23,7 +22,7 @@ public final class RemnantHud {
     public static void register() {
         HudRenderCallback.EVENT.register((draw, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
-            if (!RemnantConfig.enabled || client.player == null || client.world == null) return;
+            if (client.player == null || client.world == null) return;
 
             boolean near = !client.world.getEntitiesByType(
                 TypeFilter.instanceOf(RemnantEntity.class),
