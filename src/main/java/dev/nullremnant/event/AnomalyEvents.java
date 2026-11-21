@@ -31,5 +31,6 @@ public final class AnomalyEvents {
             default -> recipient.sendMessage(Text.literal("§7The ground looks different for a moment."), false);
         }
         state.awareness(1);
+        state.fear(1);
     }
 }
