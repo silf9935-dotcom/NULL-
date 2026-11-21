@@ -2,27 +2,35 @@
 
 Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 
-## Implemented in this repository
-- Fabric entry point and world tick event.
-- Per-world persistent progression state (day, stage, fear, awareness, intrusion, event timestamps).
+## Implemented
+- Fabric entrypoint and per-world persistent state.
 - Five escalation stages with day thresholds: 0–2, 3–9, 10–14, 15–20, 21+.
-- Stage-specific event pools: whispers, distant footsteps, strange messages, lore signs, bedrock-cross anomaly, sleep interruption.
-- Horror director: periodic low-frequency messages and awareness progression.
-- Anomaly event hook: rare subtle messages and a very small chance of a nearby stone-to-cobblestone alteration from stage 2 onward.
-- English and Russian language files.
+- Narrative event pools: whispers, messages, lore signs, bedrock-cross anomaly, sleep interruption.
+- Horror director and rare environment anomaly hooks.
+- Registered Remnant hostile entity using a temporary vanilla zombie appearance, custom health/speed/damage, target and wander goals, pursuit, gaze reaction, retreat teleport, and despawn.
+- Stalker director can spawn the entity at a distance beginning at stage 2.
+- Client renderer registration (currently vanilla zombie model/texture placeholder).
+- Commands: `/remnant lore`; operator-only `/remnant status` and `/remnant spawn`.
+- English/Russian language files, event catalog and lore archive.
+- GitHub Actions build workflow.
 
 ## Build
-Requires Java 17 and Gradle with Fabric Loom 1.6 available:
+Java 17 and Gradle 8.6:
 ```sh
 gradle build
 ```
-The repository currently does **not** include a Gradle wrapper. If compilation is successful, the jar is under `build/libs`.
+A GitHub Actions workflow runs this on pushes and pull requests. The build has not yet been verified in this session.
 
-## Prototype limitations
-This is not yet a complete playable horror mod. A custom Remnant entity, navigation/AI, renderer, client fog/audio, nightmare corridor, ARG puzzles, dedicated assets, finale, configuration screen, and tests are still not implemented. Source has been committed, but it has not been compiled in this environment; Minecraft/Fabric API compatibility must be verified with a local build.
+## Not yet implemented
+- Original custom Remnant model/texture, animations, and sound assets.
+- Nightmare corridor or dream scene.
+- Client-side fog, post-processing, audio layering, HUD/GUI effects.
+- Action memory / structure reconstruction system.
+- ARG puzzle chain or optional save-folder artifacts.
+- Finale, endings, config UI, accessibility controls, and gameplay tests.
 
-## Design boundaries
-All effects are confined to Minecraft. The mod will not read personal files, access the operating system, alter system settings, or block game exit. Any save-file ARG content will be opt-in and limited to the current world save.
+## Boundaries
+Horror effects remain in-game. The mod will not read personal files, access the operating system, modify system settings, or prevent the player from exiting. Any future ARG file features will be opt-in and limited to the Minecraft world save.
 
 ## Lore
-The Remnant is a reconstruction of a player from corrupted world traces. It does not understand leaving; it wants to become the one who returns. It copies the player's routines and builds places it mistakes for memories.
+The Remnant is a reconstruction of a player from corrupted world traces. It does not understand leaving; it wants to become the one who returns. It copies routines and structures until imitation becomes ownership.
