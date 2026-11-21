@@ -2,7 +2,9 @@ package dev.nullremnant.entity;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.*;\nimport net.minecraft.server.world.ServerWorld;\nimport dev.nullremnant.state.StateAccess;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.server.world.ServerWorld;
+import dev.nullremnant.state.StateAccess;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.ZombieEntity;
@@ -31,7 +33,16 @@ public class RemnantEntity extends ZombieEntity {
     @Override
     protected void initGoals() {
         goalSelector.add(0, new SwimGoal(this));
-        goalSelector.add(1, new MeleeAttackGoal(this, 1.15, false) {\n            @Override\n            public boolean canStart() {\n                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4 && super.canStart();\n            }\n            @Override\n            public boolean shouldContinue() {\n                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4 && super.shouldContinue();\n            }\n        });
+        goalSelector.add(1, new MeleeAttackGoal(this, 1.15, false) {
+            @Override
+            public boolean canStart() {
+                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4 && super.canStart();
+            }
+            @Override
+            public boolean shouldContinue() {
+                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4 && super.shouldContinue();
+            }
+        });
         goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 28.0f));
         goalSelector.add(3, new WanderAroundFarGoal(this, 0.65));
         goalSelector.add(4, new LookAroundGoal(this));
