@@ -97,7 +97,7 @@ public final class RemnantCommands {
                 }))
                 .then(CommandManager.literal("despawn").requires(source -> source.hasPermissionLevel(2)).executes(context -> {
                     ServerWorld world = context.getSource().getWorld();
-                    List<RemnantEntity> entities = world.getEntitiesByType(RemnantEntities.REMNANT, entity -> true);
+                    List<? extends RemnantEntity> entities = world.getEntitiesByType(RemnantEntities.REMNANT, entity -> true);
                     entities.forEach(RemnantEntity::discard);
                     int removed = entities.size();
                     context.getSource().sendFeedback(() -> Text.literal(
