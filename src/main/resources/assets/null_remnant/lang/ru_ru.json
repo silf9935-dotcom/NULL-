@@ -80,5 +80,15 @@
   "sign.null_remnant.learned_hands": "Оно выучило твои руки.",
   "sign.null_remnant.been_here": "Ты уже бывал здесь.",
   "sign.null_remnant.can_build": "Теперь оно умеет строить.",
-  "sign.null_remnant.remembers": "Оно помнит."
+  "sign.null_remnant.remembers": "Оно помнит.",
+  "command.null_remnant.help": "Команды NULL: The Remnant\n/remnant lore — прочитать текущую главу мира\n/remnant status — показать состояние мира (оператор)\n/remnant spawn — безопасно призвать Остаток (оператор)\n/remnant despawn — удалить сущностей Остатка в этом измерении (оператор)\n/remnant reload — перезагрузить config/null_remnant.json (оператор)",
+  "command.null_remnant.reloaded": "Конфигурация NULL Remnant перезагружена. enabled=%s, eventFrequency=%s, stalkerFrequency=%s",
+  "command.null_remnant.status": "NULL Remnant | день %s | стадия %s | страх %s | осведомлённость %s | вторжение %s | активные сущности %s | включён %s",
+  "command.null_remnant.player_only": "Эту команду может использовать только игрок.",
+  "command.null_remnant.disabled": "NULL Remnant отключён в конфигурации.",
+  "command.null_remnant.no_safe_spawn": "Не удалось найти безопасное загруженное место для появления рядом с вами.",
+  "command.null_remnant.create_failed": "Не удалось создать сущность Остатка.",
+  "command.null_remnant.spawn_failed": "Не удалось добавить Остаток в этот мир.",
+  "command.null_remnant.spawned": "Остаток появился в точке %s, %s, %s.",
+  "command.null_remnant.despawned": "Удалено сущностей Остатка в этом измерении: %s."
 }
