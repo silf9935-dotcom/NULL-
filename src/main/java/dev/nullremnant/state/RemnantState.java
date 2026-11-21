@@ -8,7 +8,7 @@ public final class RemnantState extends PersistentState {
     private long lastStalker = -1, lastAnomaly = -1, lastHorror = -1;
     private long lastEvent = -1, lastSleep = -1;
     private boolean nightmareSeen, finaleStarted, memoryAnchorSet, memoryEchoPlaced, doorEchoPlaced;
-    private int memoryX, memoryY, memoryZ, doorInteractions, doorX, doorY, doorZ;
+    private int memoryX, memoryY, memoryZ, doorInteractions, doorRepeatCount, doorX, doorY, doorZ;
 
     public static RemnantState load(NbtCompound n) {
         RemnantState s = new RemnantState();
@@ -81,7 +81,7 @@ public final class RemnantState extends PersistentState {
     public int memoryX() { return memoryX; }
     public int memoryY() { return memoryY; }
     public int memoryZ() { return memoryZ; }
-    public int doorInteractions() { return doorInteractions; }
+    public int doorInteractions() { return doorInteractions; }\n    public int doorRepeatCount() { return doorRepeatCount; }
     public int doorX() { return doorX; }
     public int doorY() { return doorY; }
     public int doorZ() { return doorZ; }
@@ -105,7 +105,7 @@ public final class RemnantState extends PersistentState {
     }
     public void memoryEchoPlaced(boolean v) { memoryEchoPlaced = v; markDirty(); }
     public void recordDoor(int x, int y, int z) {
-        doorInteractions++; doorX = x; doorY = y; doorZ = z; markDirty();
+        doorInteractions++;\n        if (doorX == x && doorY == y && doorZ == z) doorRepeatCount++;\n        else doorRepeatCount = 1;\n        doorX = x; doorY = y; doorZ = z; markDirty();
     }
     public void doorEchoPlaced(boolean v) { doorEchoPlaced = v; markDirty(); }
 }
