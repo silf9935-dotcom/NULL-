@@ -29,6 +29,12 @@ jobs:
         with:
           gradle-version: 8.6
 
+      - name: Validate JSON resources, texture and translations
+        run: python3 scripts/validate_resources.py
+
+      - name: Check whitespace errors
+        run: git diff --check
+
       - name: Build mod and run verification tasks
         run: gradle --no-daemon clean build
 
