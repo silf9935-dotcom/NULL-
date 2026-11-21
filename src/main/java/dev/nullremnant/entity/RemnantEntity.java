@@ -85,7 +85,7 @@ public class RemnantEntity extends ZombieEntity {
                 double distance = squaredDistanceTo(player);
                 if (distance > 100.0) {
                     if (stalkPathCooldown > 0) stalkPathCooldown--;
-                    if (getNavigation().isIdle() || stalkPathCooldown == 0) {
+                    if (stalkPathCooldown == 0) {
                         getNavigation().startMovingTo(player, 0.72);
                         stalkPathCooldown = 10;
                     }
