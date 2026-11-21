@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import json
 import re
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -87,6 +86,21 @@ def main() -> None:
     missing = sorted(referenced_keys - english_keys)
     if missing:
         raise SystemExit(f"Java code references missing translation keys: {missing}")
+
+    placeholder_pattern = re.compile(r"%(?:[0-9]+\\$)?s")
+    mismatched_placeholders = []
+    for key in sorted(english_keys):
+        english_count = len(placeholder_pattern.findall(languages["en_us"][key]))
+        russian_count = len(placeholder_pattern.findall(languages["ru_ru"][key]))
+        if english_count != russian_count:
+            mismatched_placeholders.append(
+                f"{key}: en_us={english_count}, ru_ru={russian_count}"
+            )
+    if mismatched_placeholders:
+        raise SystemExit(
+            "Translation placeholder counts differ: "
+            + "; ".join(mismatched_placeholders)
+        )
 
     print(
         "Resource validation passed: "
