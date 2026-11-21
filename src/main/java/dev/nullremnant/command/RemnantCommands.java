@@ -105,9 +105,10 @@ public final class RemnantCommands {
                     List<? extends RemnantEntity> entities = world.getEntitiesByType(RemnantEntities.REMNANT, entity -> true);
                     entities.forEach(RemnantEntity::discard);
                     int removed = entities.size();
-                    context.getSource().sendFeedback(() -> Text.translatable(
-                        "command.null_remnant.despawned", removed
-                    ), true);
+                    String resultKey = removed == 1
+                        ? "command.null_remnant.despawned_one"
+                        : "command.null_remnant.despawned_many";
+                    context.getSource().sendFeedback(() -> Text.translatable(resultKey, removed), true);
                     return Command.SINGLE_SUCCESS;
                 }))
             )
