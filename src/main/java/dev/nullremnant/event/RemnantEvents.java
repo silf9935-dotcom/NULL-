@@ -23,7 +23,7 @@ public final class RemnantEvents {
   if(t%INTERVAL==0&&s.lastEvent()!=t){s.lastEvent(t);if(RNG.nextDouble()<=chance(stage)*RemnantConfig.eventFrequency/100.0){int roll=RNG.nextInt(100);switch(stage){case 0->early(world,roll);case 1->awakening(world,roll);case 2->aggression(world,roll);case 3->reality(world,roll);default->finale(world,roll);}}}
   HorrorDirector.tick(world);
   MemorySystem.tick(world);
-  for(ServerPlayerEntity p:world.getPlayers())AnomalyEvents.tryTrigger(world,p);
+  if(!world.getPlayers().isEmpty())AnomalyEvents.tryTrigger(world,world.getPlayers().get(0));
  }
  private static int stage(int d){return d<3?0:d<10?1:d<15?2:d<21?3:4;}private static double chance(int s){return new double[]{.10,.24,.40,.52,.64}[s];}
  private static void announce(ServerWorld w,int s){String[] m={"","","§7Something in this world remembers.","§8You are no longer alone.","§cThe world has begun to repeat.","§4The save is not yours alone."};if(s>0)RemnantMod.tell(w,m[s]);if(s==4){RemnantState state=StateAccess.get(w);if(!state.finaleStarted()){state.finaleStarted(true);state.intrusion(10);RemnantMod.tell(w,"§4It has learned where you began.");RemnantMod.tell(w,"§8The next door may not lead back.");}}}
