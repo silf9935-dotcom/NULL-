@@ -6,6 +6,7 @@ import dev.nullremnant.entity.RemnantEntities;
 import dev.nullremnant.event.MemorySystem;
 import dev.nullremnant.event.RemnantEvents;
 import dev.nullremnant.item.RemnantItems;
+import dev.nullremnant.RemnantSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.world.ServerWorld;
@@ -20,6 +21,7 @@ public final class RemnantMod implements ModInitializer {
     @Override
     public void onInitialize() {
         RemnantConfig.load();
+        RemnantSounds.register();
         RemnantEntities.register();
         RemnantItems.register();
         RemnantCommands.register();
