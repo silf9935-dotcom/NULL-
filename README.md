@@ -28,6 +28,30 @@ gradle build
 ```
 A GitHub Actions workflow runs this on pushes and pull requests. The build has not yet been verified in this session.
 
+
+## Configuration
+
+The file `config/null_remnant.json` is created on first launch. Values:
+
+- `enabled`: disables the event directors and memory hooks when false.
+- `nightmares`: controls sleep interruptions.
+- `subtleAnomalies`: controls the small ambient anomaly director.
+- `eventFrequency`: event frequency percentage (0–200; 100 is default).
+- `stalkerFrequency`: stalker spawn frequency percentage (0–200; 100 is default).
+
+Use `/remnant reload` (operator permission level 2) to reload the file without restarting. `/remnant status` shows the saved day, stage, fear, and awareness; `/remnant spawn` is a testing command.
+
+## Development / testing checklist
+
+- [ ] Run `gradle build` with Java 17 and Gradle 8.6.
+- [ ] Launch a Fabric 1.20.1 client and verify the Remnant model/renderer.
+- [ ] Create a fresh survival world; verify stage progression after sleeping / advancing days.
+- [ ] Verify configuration switches and 0% frequency suppress events.
+- [ ] Verify Remnant spawning, pursuit, gaze response, retreat, and despawn.
+- [ ] Verify signs/anomalies only occur in loaded, safe positions and do not overwrite player builds.
+- [ ] Verify save/reload persistence of stage and memory anchor.
+- [ ] Test multiplayer event messages and entity targeting.
+
 ## Not yet implemented
 - Original custom texture and custom sound assets (the model is code-defined; currently uses a vanilla texture).
 - Nightmare corridor or dream scene.
