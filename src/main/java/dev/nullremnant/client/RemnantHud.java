@@ -11,10 +11,10 @@ public final class RemnantHud {
     private static long lastWhisper = -1L;
     private static int whisper = -1;
     private static final String[] LINES = {
-        "You are not alone.",
-        "It saw you.",
-        "Do not look away.",
-        "It remembers."
+        "hud.null_remnant.whisper1",
+        "hud.null_remnant.whisper2",
+        "hud.null_remnant.whisper3",
+        "hud.null_remnant.whisper4"
     };
 
     private RemnantHud() {
@@ -38,9 +38,10 @@ public final class RemnantHud {
                 whisper = (whisper + 1) % LINES.length;
             }
 
-            int x = (draw.getScaledWindowWidth() - client.textRenderer.getWidth(LINES[whisper])) / 2;
+            Text line = Text.translatable(LINES[whisper]);
+            int x = (draw.getScaledWindowWidth() - client.textRenderer.getWidth(line)) / 2;
             int y = draw.getScaledWindowHeight() - 48;
-            draw.drawTextWithShadow(client.textRenderer, Text.literal(LINES[whisper]), x, y, 0x88777777);
+            draw.drawTextWithShadow(client.textRenderer, line, x, y, 0x88777777);
         });
     }
 }
