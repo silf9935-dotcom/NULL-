@@ -5,7 +5,7 @@ import net.minecraft.world.PersistentState;
 
 public final class RemnantState extends PersistentState {
     private int day, stage, fear, awareness, intrusion;
-    private long lastStalker = -1, lastAnomaly = -1, lastHorror = -1;
+    private long lastStalker = -1, lastEntityStalker = -1, lastAnomaly = -1, lastHorror = -1;
     private long lastEvent = -1, lastSleep = -1;
     private boolean nightmareSeen, finaleStarted, memoryAnchorSet, memoryEchoPlaced, doorEchoPlaced;
     private int memoryX, memoryY, memoryZ, doorInteractions, doorRepeatCount, doorX, doorY, doorZ;
@@ -41,6 +41,7 @@ public final class RemnantState extends PersistentState {
         s.doorZ = n.getInt("doorZ");
         s.doorEchoPlaced = n.getBoolean("doorEchoPlaced");
         s.lastStalker = n.getLong("lastStalker");
+        s.lastEntityStalker = n.getLong("lastEntityStalker");
         s.lastAnomaly = n.getLong("lastAnomaly");
         s.lastHorror = n.getLong("lastHorror");
         s.lastAreaX = n.getInt("lastAreaX"); s.lastAreaZ = n.getInt("lastAreaZ");
@@ -78,6 +79,7 @@ public final class RemnantState extends PersistentState {
         n.putInt("doorZ", doorZ);
         n.putBoolean("doorEchoPlaced", doorEchoPlaced);
         n.putLong("lastStalker", lastStalker);
+        n.putLong("lastEntityStalker", lastEntityStalker);
         n.putLong("lastAnomaly", lastAnomaly);
         n.putLong("lastHorror", lastHorror);
         n.putInt("lastAreaX", lastAreaX); n.putInt("lastAreaZ", lastAreaZ);
@@ -100,6 +102,7 @@ public final class RemnantState extends PersistentState {
     public long lastEvent() { return lastEvent; }
     public long lastSleep() { return lastSleep; }
     public long lastStalker() { return lastStalker; }
+    public long lastEntityStalker() { return lastEntityStalker; }
     public long lastAnomaly() { return lastAnomaly; }
     public long lastHorror() { return lastHorror; }
     public boolean finaleStarted() { return finaleStarted; }
@@ -141,6 +144,7 @@ public final class RemnantState extends PersistentState {
     public void lastEvent(long v) { lastEvent = v; markDirty(); }
     public void lastSleep(long v) { lastSleep = v; markDirty(); }
     public void lastStalker(long v) { lastStalker = v; markDirty(); }
+    public void lastEntityStalker(long v) { lastEntityStalker = v; markDirty(); }
     public void lastAnomaly(long v) { lastAnomaly = v; markDirty(); }
     public void lastHorror(long v) { lastHorror = v; markDirty(); }
     public void nightmareSeen() { nightmareSeen = true; markDirty(); }
