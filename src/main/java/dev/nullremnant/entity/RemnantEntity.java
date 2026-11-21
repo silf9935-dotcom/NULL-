@@ -114,11 +114,12 @@ public class RemnantEntity extends ZombieEntity {
 
     @Override
     public void tick() {
-        if (!RemnantConfig.enabled) {
+        if (!getWorld().isClient && !RemnantConfig.enabled) {
             discard();
             return;
         }
         super.tick();
+        if (getWorld().isClient) return;
         lifetimeTicks++;
         LivingEntity target = getTarget();
         if (target instanceof PlayerEntity player && player.isAlive()) {
