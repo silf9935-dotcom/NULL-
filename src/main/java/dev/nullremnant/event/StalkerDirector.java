@@ -1,4 +1,5 @@
 package dev.nullremnant.event;
+import dev.nullremnant.config.RemnantConfig;
 
 import dev.nullremnant.entity.RemnantEntities;
 import dev.nullremnant.entity.RemnantEntity;
@@ -18,7 +19,7 @@ public final class StalkerDirector {
         if(state.stage()<2) return;
         if(world.getEntitiesByType(RemnantEntities.REMNANT, e->e.isAlive()).size()>0) return;
         int chance=state.stage()>=4?22:state.stage()==3?14:6;
-        if(world.getRandom().nextInt(100)>=chance) return;
+        if(world.getRandom().nextInt(100)>=chance*RemnantConfig.stalkerFrequency/100) return;
         ServerPlayerEntity player=world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
         double angle=world.getRandom().nextDouble()*Math.PI*2;
         int radius=18+world.getRandom().nextInt(15);
