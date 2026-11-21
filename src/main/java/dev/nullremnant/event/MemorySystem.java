@@ -143,7 +143,7 @@ public final class MemorySystem {
                 double behindX = watched.getX() + Math.sin(angle) * -9.0;
                 double behindZ = watched.getZ() + Math.cos(angle) * -9.0;
                 BlockPos behindSample = BlockPos.ofFloored(behindX, watched.getY(), behindZ);
-                if (!world.isChunkLoaded(behindSample)) return;
+                if (world.isChunkLoaded(behindSample)) {
                 BlockPos presence = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, behindSample);
                 if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()
                         && world.getBlockState(presence.up()).isAir() && world.getBlockState(presence.down()).isSolid()
@@ -163,6 +163,7 @@ public final class MemorySystem {
                         : "§7You feel watched."), true);
                     state.lastStalker(world.getTime());
                 }
+                }
             }
         }
 
@@ -180,7 +181,7 @@ public final class MemorySystem {
             }
             if (state.stage() >= 4 && state.areaRevisits() >= 3 && !state.areaEchoPlaced()) {
                 BlockPos areaCenter = new BlockPos(state.rememberedAreaX() * 16 + 8, 0, state.rememberedAreaZ() * 16 + 8);
-                if (!world.isChunkLoaded(areaCenter)) return;
+                if (world.isChunkLoaded(areaCenter)) {
                 BlockPos echoSign = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, areaCenter);
                 if (world.isChunkLoaded(echoSign) && world.getBlockState(echoSign).isAir() && world.getBlockState(echoSign.down()).isSolid()) {
                     world.setBlockState(echoSign, Blocks.OAK_SIGN.getDefaultState());
@@ -190,6 +191,7 @@ public final class MemorySystem {
                         world.updateListeners(echoSign, world.getBlockState(echoSign), world.getBlockState(echoSign), 3);
                         state.areaEchoPlaced(true);
                     }
+                }
                 }
             }
         }
@@ -226,7 +228,7 @@ public final class MemorySystem {
                 var block = Registries.BLOCK.get(id);
                 var mimicState = block.getDefaultState();
                 BlockPos buildSample = remembered.add(1, 0, 1);
-                if (!world.isChunkLoaded(buildSample)) break;
+                if (!world.isChunkLoaded(buildSample)) continue;
                 BlockPos target = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, buildSample);
                 if (world.isChunkLoaded(target) && world.getBlockState(target).isAir()
                         && world.getBlockState(target.down()).isSolid()
@@ -244,7 +246,7 @@ public final class MemorySystem {
         BlockPos anchor = new BlockPos(state.memoryX(), state.memoryY(), state.memoryZ());
         for (ServerPlayerEntity player : world.getPlayers()) {
             if (!player.getBlockPos().isWithinDistance(anchor, 6.0)) continue;
-            if (!world.isChunkLoaded(anchor)) return;
+            if (!world.isChunkLoaded(anchor)) continue;
             BlockPos place = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, anchor);
             if (world.isChunkLoaded(place) && world.getBlockState(place).isAir() && world.getBlockState(place.down()).isSolid()) {
                 world.setBlockState(place, Blocks.OAK_SIGN.getDefaultState());
