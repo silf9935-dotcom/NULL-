@@ -11,7 +11,7 @@ public final class AnomalyEvents {
  private AnomalyEvents(){}
  public static void tryTrigger(ServerWorld world,ServerPlayerEntity player){
   if(!RemnantConfig.enabled||!RemnantConfig.subtleAnomalies||world.getTime()%1200L!=0)return;RemnantState state=StateAccess.get(world);int stage=state.stage();if(stage<2)return;
-  int chance=stage>=4?12:stage==3?7:3;if(world.getRandom().nextInt(100)>=chance)return;
+  int chance=stage>=4?12:stage==3?7:3;if(world.getRandom().nextInt(100)>=chance*RemnantConfig.eventFrequency/100)return;
   switch(world.getRandom().nextInt(4)){
    case 0->player.sendMessage(Text.literal("§8A shape disappears at the edge of your vision."),false);
    case 1->player.sendMessage(Text.literal("§7The cave sounds strangely distant."),false);
