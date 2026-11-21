@@ -14,12 +14,12 @@ import net.minecraft.util.math.BlockPos;
 public final class StalkerDirector {
     private StalkerDirector() {}
     public static void tick(ServerWorld world) {
-        if(world.getTime()%2400L!=0 || world.getPlayers().isEmpty()) return;
+        if(!RemnantConfig.enabled || world.getPlayers().isEmpty()) return;
         RemnantState state=StateAccess.get(world);
         if(state.stage()<2) return;
         if(world.getEntitiesByType(RemnantEntities.REMNANT, e->e.isAlive()).size()>0) return;
         int chance=state.stage()>=4?22:state.stage()==3?14:6;
-        if(world.getRandom().nextInt(100)>=chance*RemnantConfig.stalkerFrequency/100) return;
+        state.lastStalker(now);\n        if(world.getRandom().nextInt(100)>=chance*RemnantConfig.stalkerFrequency/100) return;
         ServerPlayerEntity player=world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
         double angle=world.getRandom().nextDouble()*Math.PI*2;
         int radius=18+world.getRandom().nextInt(15);
