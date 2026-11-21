@@ -95,6 +95,30 @@ public final class MemorySystem {
         if (!RemnantConfig.enabled || world.getTime() % 200L != 0 || world.getPlayers().isEmpty()) return;
         RemnantState state = StateAccess.get(world);
 
+        // A short-lived shadow advances toward a player over several world ticks, then vanishes.
+        if (state.shadowActive() && world.getTime() % 200L == 0) {
+            ServerPlayerEntity target = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
+            BlockPos shadow = new BlockPos(state.shadowX(), state.shadowY(), state.shadowZ());
+            if (state.shadowSteps() >= 3 || !world.isChunkLoaded(shadow) || !world.getBlockState(shadow).isAir()) {
+                world.spawnParticles(ParticleTypes.LARGE_SMOKE, shadow.getX() + 0.5, shadow.getY() + 0.2, shadow.getZ() + 0.5, 5, 0.2, 0.3, 0.2, 0.01);
+                state.stopShadow();
+            } else {
+                int dx = Integer.compare(target.getBlockX(), shadow.getX());
+                int dz = Integer.compare(target.getBlockZ(), shadow.getZ());
+                BlockPos next = shadow.add(dx, 0, dz);
+                BlockPos floor = next.down();
+                if (world.isChunkLoaded(next) && world.getBlockState(next).isAir() && world.getBlockState(next.up()).isAir()
+                        && world.getBlockState(floor).isSolid() && world.getLightLevel(next) <= 7
+                        && !target.getBlockPos().isWithinDistance(next, 4.0)) {
+                    state.moveShadow(next.getX(), next.getY(), next.getZ());
+                    world.spawnParticles(ParticleTypes.SMOKE, shadow.getX() + 0.5, shadow.getY() + 0.1, shadow.getZ() + 0.5, 4, 0.15, 0.2, 0.15, 0.005);
+                    world.spawnParticles(ParticleTypes.SMOKE, next.getX() + 0.5, next.getY() + 0.1, next.getZ() + 0.5, 6, 0.2, 0.25, 0.2, 0.01);
+                } else {
+                    state.stopShadow();
+                }
+            }
+        }
+
         // A distant, non-damaging presence: rare smoke and a cave sound behind a player.
         if (state.stage() >= 3 && (state.lastStalker() < 0 || world.getTime() - state.lastStalker() >= 6000L)
                 && world.getTime() % 1200L == 0) {
@@ -117,6 +141,7 @@ public final class MemorySystem {
                     world.playSound(null, presence, SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 0.85f, 0.55f);
                     state.fear(1);
                     state.awareness(1);
+                    state.startShadow(presence.getX(), presence.getY(), presence.getZ());
                     watched.sendMessage(Text.literal(state.stage() >= 4
                         ? "§8Something was standing behind you."
                         : "§7You feel watched."), true);
