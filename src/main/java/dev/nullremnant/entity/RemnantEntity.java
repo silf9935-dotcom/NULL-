@@ -25,6 +25,7 @@ import java.util.EnumSet;
 public class RemnantEntity extends ZombieEntity {
     private int stareTicks;
     private int lifetimeTicks;
+    private int stalkPathCooldown;
     private int retreatTicks;
     private double retreatX;
     private double retreatY;
@@ -83,8 +84,13 @@ public class RemnantEntity extends ZombieEntity {
                 getLookControl().lookAt(player, 25.0f, 25.0f);
                 double distance = squaredDistanceTo(player);
                 if (distance > 100.0) {
-                    getNavigation().startMovingTo(player, 0.72);
+                    if (stalkPathCooldown > 0) stalkPathCooldown--;
+                    if (getNavigation().isIdle() || stalkPathCooldown == 0) {
+                        getNavigation().startMovingTo(player, 0.72);
+                        stalkPathCooldown = 10;
+                    }
                 } else {
+                    stalkPathCooldown = 0;
                     getNavigation().stop();
                 }
             }
@@ -108,15 +114,12 @@ public class RemnantEntity extends ZombieEntity {
 
     @Override
     public void tick() {
-        super.tick();
-        lifetimeTicks++;
         if (!RemnantConfig.enabled) {
-            setTarget(null);
-            getNavigation().stop();
-            retreatTicks = 0;
-            setInvisible(false);
+            discard();
             return;
         }
+        super.tick();
+        lifetimeTicks++;
         LivingEntity target = getTarget();
         if (target instanceof PlayerEntity player && player.isAlive()) {
             if (squaredDistanceTo(player) < 256.0 && looksAt(player, this)) {
@@ -154,6 +157,7 @@ public class RemnantEntity extends ZombieEntity {
         nbt.putDouble("RemnantRetreatY", retreatY);
         nbt.putDouble("RemnantRetreatZ", retreatZ);
         nbt.putInt("RemnantLifetimeTicks", lifetimeTicks);
+        nbt.putInt("RemnantStalkPathCooldown", stalkPathCooldown);
     }
 
     @Override
@@ -165,6 +169,7 @@ public class RemnantEntity extends ZombieEntity {
         retreatY = nbt.getDouble("RemnantRetreatY");
         retreatZ = nbt.getDouble("RemnantRetreatZ");
         lifetimeTicks = nbt.getInt("RemnantLifetimeTicks");
+        stalkPathCooldown = nbt.getInt("RemnantStalkPathCooldown");
         setInvisible(retreatTicks > 0);
     }
 
