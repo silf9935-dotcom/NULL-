@@ -247,11 +247,6 @@ public class RemnantEntity extends ZombieEntity {
     }
 
     @Override
-    protected void tickWaterConversion() {
-        // The Remnant is not a normal zombie and must never turn into a drowned.
-    }
-
-    @Override
     protected boolean shouldDropLoot() {
         return false;
     }
