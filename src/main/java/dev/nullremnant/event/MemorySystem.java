@@ -103,11 +103,17 @@ public final class MemorySystem {
                 double angle = watched.getYaw() * Math.PI / 180.0;
                 double behindX = watched.getX() + Math.sin(angle) * -9.0;
                 double behindZ = watched.getZ() + Math.cos(angle) * -9.0;
-                BlockPos presence = BlockPos.ofFloored(behindX, watched.getY(), behindZ);
-                if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()) {
+                BlockPos surface = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, BlockPos.ofFloored(behindX, watched.getY(), behindZ));
+                BlockPos presence = surface.up();
+                if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()
+                        && world.getBlockState(presence.up()).isAir() && world.getBlockState(surface).isSolid()
+                        && world.getLightLevel(presence) <= 7 && watched.getBlockPos().isWithinDistance(presence, 5.0) == false) {
                     // Keep the apparition purely atmospheric: no collision, damage, or block changes.
-                    world.spawnParticles(ParticleTypes.SMOKE, behindX, watched.getY() + 0.2, behindZ, 12, 0.35, 0.5, 0.35, 0.015);
-                    world.spawnParticles(ParticleTypes.LARGE_SMOKE, behindX, watched.getY() + 0.4, behindZ, 3, 0.2, 0.3, 0.2, 0.005);
+                    double px = presence.getX() + 0.5;
+                    double py = presence.getY() + 0.15;
+                    double pz = presence.getZ() + 0.5;
+                    world.spawnParticles(ParticleTypes.SMOKE, px, py, pz, 12, 0.35, 0.5, 0.35, 0.015);
+                    world.spawnParticles(ParticleTypes.LARGE_SMOKE, px, py + 0.2, pz, 3, 0.2, 0.3, 0.2, 0.005);
                     world.playSound(null, presence, SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 0.85f, 0.55f);
                     state.fear(1);
                     state.awareness(1);
