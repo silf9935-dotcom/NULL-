@@ -9,7 +9,8 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Horror director and rare environment anomaly hooks with config-aware chance scaling, randomized player targeting, and persistent per-director cooldowns.
 - Registered Remnant entity with target/wander/look goals, gaze-triggered retreat, and staged aggression (melee attack is enabled only at stage 5); it despawns after a long idle period.
 - Stalker director can spawn the entity at a distance beginning at stage 2.
-- Player block-break activity contributes to an in-world memory/awareness counter and produces stage-escalating feedback; repeated door interactions and revisiting remembered chunk-sized areas can trigger increasingly personal echoes. Spatial memory is persisted with the world. Narrative echoes use the actual selected player's name.
+- Player block-break activity contributes to memory/awareness and produces stage-escalating feedback. Repeated door interactions and revisiting remembered chunk-sized areas can trigger personal echoes; spatial memory persists with the world.
+- At stage 4+, the Remnant can persist a safe, ordinary solid block the player broke (excluding block entities and fluids) and, once near that remembered location, reproduce a single copy on an empty supported position. The mimic block memory and one-time echo flag persist with the world. Narrative echoes use the actual selected player's name.
 - At stage 3+, a persistent memory anchor may produce a sign echo when the player revisits that location.
 - Nightmare interruptions select from players who are actually sleeping (rather than always favoring the first server player); the first interruption includes a unique hint and later interruptions escalate at higher stages.
 - Stalker appearance and nightmare cues use vanilla Enderman audio as a temporary sound placeholder.
@@ -58,7 +59,7 @@ Use `/remnant reload` (operator permission level 2) to reload the file without r
 - Original custom texture and custom sound assets (the model is code-defined; currently uses a vanilla texture).
 - Nightmare corridor or dream scene.
 - Client-side fog, post-processing, audio layering, HUD/GUI effects.
-- Action memory / structure reconstruction system.
+- Broader action memory and multi-block structure reconstruction (current mimicry is a one-block prototype).
 - ARG puzzle chain or optional save-folder artifacts.
 - Finale, endings, config UI, accessibility controls, and gameplay tests.
 
