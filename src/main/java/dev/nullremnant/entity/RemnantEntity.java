@@ -11,6 +11,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -19,6 +21,7 @@ public class RemnantEntity extends ZombieEntity {
     private int stareTicks;
     private int retreatTicks;
     private double retreatX;
+    private double retreatY;
     private double retreatZ;
 
     public RemnantEntity(EntityType<? extends RemnantEntity> type, World world) {
@@ -110,6 +113,7 @@ public class RemnantEntity extends ZombieEntity {
             if (stareTicks >= 80) {
                 retreatTicks = 100;
                 retreatX = player.getX();
+                retreatY = player.getY() + player.getStandingEyeHeight();
                 retreatZ = player.getZ();
                 stareTicks = 0;
                 setInvisible(true);
@@ -149,6 +153,11 @@ public class RemnantEntity extends ZombieEntity {
                     || !world.getBlockState(feet.up()).isAir()
                     || !world.getBlockState(feet.down()).isSolid()
                     || world.getLightLevel(feet) > 7) continue;
+            Vec3d fromPlayer = new Vec3d(retreatX, retreatY, retreatZ);
+            Vec3d toShadow = new Vec3d(feet.getX() + 0.5, feet.getY() + 1.4, feet.getZ() + 0.5);
+            RaycastContext coverCheck = new RaycastContext(fromPlayer, toShadow, RaycastContext.ShapeType.COLLIDER,
+                RaycastContext.FluidHandling.NONE, this);
+            if (world.raycast(coverCheck).getType() != HitResult.Type.BLOCK) continue;
             refreshPositionAndAngles(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5,
                 getYaw() + 110.0f, getPitch());
             return;
