@@ -18,7 +18,7 @@ public final class AnomalyEvents {
         if (stage < 2) return;
 
         int chance = stage >= 4 ? 12 : stage == 3 ? 7 : 3;
-        state.lastAnomaly(now);\n        int scaledChance = chance * RemnantConfig.eventFrequency / 100;
+                int scaledChance = chance * RemnantConfig.eventFrequency / 100;
         if (world.getRandom().nextInt(100) >= scaledChance) return;
 
         // Pick the recipient from the active players instead of always targeting
