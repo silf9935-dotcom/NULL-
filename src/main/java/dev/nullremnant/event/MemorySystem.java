@@ -17,6 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 
@@ -25,7 +26,7 @@ public final class MemorySystem {
 
     public static void register() {
         UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
-            if (RemnantConfig.enabled && world instanceof ServerWorld server && player instanceof ServerPlayerEntity serverPlayer) {
+            if (RemnantConfig.enabled && hand == Hand.MAIN_HAND && world instanceof ServerWorld server && player instanceof ServerPlayerEntity serverPlayer) {
                 var block = server.getBlockState(hit.getBlockPos());
                 if (block.isIn(BlockTags.DOORS) || block.isIn(BlockTags.TRAPDOORS) || block.isIn(BlockTags.FENCE_GATES)) {
                     RemnantState state = StateAccess.get(server);
