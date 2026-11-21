@@ -87,7 +87,7 @@ def main() -> None:
     if missing:
         raise SystemExit(f"Java code references missing translation keys: {missing}")
 
-    placeholder_pattern = re.compile(r"%(?:[0-9]+\\$)?s")
+    placeholder_pattern = re.compile(r"%s")
     mismatched_placeholders = []
     for key in sorted(english_keys):
         english_count = len(placeholder_pattern.findall(languages["en_us"][key]))
