@@ -6,6 +6,9 @@ import dev.nullremnant.state.StateAccess;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -91,6 +94,24 @@ public final class MemorySystem {
     public static void tick(ServerWorld world) {
         if (!RemnantConfig.enabled || world.getTime() % 200L != 0 || world.getPlayers().isEmpty()) return;
         RemnantState state = StateAccess.get(world);
+
+        // A distant, non-damaging presence: rare smoke and a cave sound behind a player.
+        if (state.stage() >= 3 && (state.lastStalker() < 0 || world.getTime() - state.lastStalker() >= 6000L)
+                && world.getTime() % 1200L == 0) {
+            ServerPlayerEntity watched = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
+            if (world.getRandom().nextInt(4) == 0 && (world.isNight() || world.getLightLevel(watched.getBlockPos()) <= 7)) {
+                double angle = watched.getYaw() * Math.PI / 180.0;
+                double behindX = watched.getX() + Math.sin(angle) * -9.0;
+                double behindZ = watched.getZ() + Math.cos(angle) * -9.0;
+                BlockPos presence = BlockPos.ofFloored(behindX, watched.getY(), behindZ);
+                if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()) {
+                    world.spawnParticles(ParticleTypes.SMOKE, behindX, watched.getY() + 0.2, behindZ, 8, 0.25, 0.4, 0.25, 0.01);
+                    world.playSound(null, presence, SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 0.7f, 0.65f);
+                    if (state.stage() >= 4) watched.sendMessage(Text.literal("§8Something was standing behind you."), true);
+                    state.lastStalker(world.getTime());
+                }
+            }
+        }
 
         if (world.getTime() % 600L == 0) {
             ServerPlayerEntity sampler = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
