@@ -252,6 +252,11 @@ public class RemnantEntity extends ZombieEntity {
     }
 
     @Override
+    protected int getExperienceToDrop(ServerWorld world) {
+        return 0;
+    }
+
+    @Override
     public boolean isPersistent() {
         return true;
     }
