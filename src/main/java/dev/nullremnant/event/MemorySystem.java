@@ -152,7 +152,7 @@ public final class MemorySystem {
                     double pz = presence.getZ() + 0.5;
                     world.spawnParticles(ParticleTypes.SMOKE, px, py, pz, 12, 0.35, 0.5, 0.35, 0.015);
                     world.spawnParticles(ParticleTypes.LARGE_SMOKE, px, py + 0.2, pz, 3, 0.2, 0.3, 0.2, 0.005);
-                    world.playSound(null, presence, SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 0.85f, 0.55f);
+                    world.playSound(null, presence, SoundEvents.AMBIENT_CAVE.value(), SoundCategory.AMBIENT, 0.85f, 0.55f);
                     state.fear(1);
                     state.awareness(1);
                     state.startShadow(presence.getX(), presence.getY(), presence.getZ(), watched.getUuid().toString());
