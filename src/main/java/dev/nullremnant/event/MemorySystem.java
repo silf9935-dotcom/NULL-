@@ -99,7 +99,7 @@ public final class MemorySystem {
         if (state.stage() >= 3 && (state.lastStalker() < 0 || world.getTime() - state.lastStalker() >= 6000L)
                 && world.getTime() % 1200L == 0) {
             ServerPlayerEntity watched = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
-            if (world.getRandom().nextInt(4) == 0 && (world.isNight() || world.getLightLevel(watched.getBlockPos()) <= 7)) {
+            if (world.getRandom().nextInt(4) == 0 && ((world.getTimeOfDay() % 24000L >= 13000L && world.getTimeOfDay() % 24000L <= 23000L) || world.getLightLevel(watched.getBlockPos()) <= 7)) {
                 double angle = watched.getYaw() * Math.PI / 180.0;
                 double behindX = watched.getX() + Math.sin(angle) * -9.0;
                 double behindZ = watched.getZ() + Math.cos(angle) * -9.0;
