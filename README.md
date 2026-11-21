@@ -9,7 +9,7 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Horror director and rare environment anomaly hooks with config-aware chance scaling, randomized player targeting, and persistent per-director cooldowns.
 - Registered Remnant entity with target/wander/look goals, gaze-triggered retreat, and staged aggression (melee attack is enabled only at stage 5); it despawns after a long idle period.
 - Stalker director can spawn the entity at a distance beginning at stage 2.
-- Player block-break activity contributes to an in-world memory/awareness counter and can produce rare stage-gated narrative feedback. Narrative echoes use the actual selected player's name.
+- Player block-break activity contributes to an in-world memory/awareness counter and produces stage-escalating feedback; repeated door interactions also trigger increasingly personal echoes. Narrative echoes use the actual selected player's name.
 - At stage 3+, a persistent memory anchor may produce a sign echo when the player revisits that location.
 - Nightmare interruptions select from players who are actually sleeping (rather than always favoring the first server player); the first interruption includes a unique hint and later interruptions escalate at higher stages.
 - Stalker appearance and nightmare cues use vanilla Enderman audio as a temporary sound placeholder.
