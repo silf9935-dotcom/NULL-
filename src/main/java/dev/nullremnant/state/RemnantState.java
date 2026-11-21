@@ -29,7 +29,7 @@ public final class RemnantState extends PersistentState {
         s.memoryX = n.getInt("memoryX");
         s.memoryY = n.getInt("memoryY");
         s.memoryZ = n.getInt("memoryZ");
-        s.doorInteractions = n.getInt("doorInteractions");
+        s.doorInteractions = n.getInt("doorInteractions");\n        s.doorRepeatCount = n.getInt("doorRepeatCount");
         s.doorX = n.getInt("doorX");
         s.doorY = n.getInt("doorY");
         s.doorZ = n.getInt("doorZ");
@@ -60,7 +60,7 @@ public final class RemnantState extends PersistentState {
         n.putInt("memoryX", memoryX);
         n.putInt("memoryY", memoryY);
         n.putInt("memoryZ", memoryZ);
-        n.putInt("doorInteractions", doorInteractions);
+        n.putInt("doorInteractions", doorInteractions);\n        n.putInt("doorRepeatCount", doorRepeatCount);
         n.putInt("doorX", doorX);
         n.putInt("doorY", doorY);
         n.putInt("doorZ", doorZ);
