@@ -105,9 +105,15 @@ public final class MemorySystem {
                 double behindZ = watched.getZ() + Math.cos(angle) * -9.0;
                 BlockPos presence = BlockPos.ofFloored(behindX, watched.getY(), behindZ);
                 if (world.isChunkLoaded(presence) && world.getBlockState(presence).isAir()) {
-                    world.spawnParticles(ParticleTypes.SMOKE, behindX, watched.getY() + 0.2, behindZ, 8, 0.25, 0.4, 0.25, 0.01);
-                    world.playSound(null, presence, SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 0.7f, 0.65f);
-                    if (state.stage() >= 4) watched.sendMessage(Text.literal("§8Something was standing behind you."), true);
+                    // Keep the apparition purely atmospheric: no collision, damage, or block changes.
+                    world.spawnParticles(ParticleTypes.SMOKE, behindX, watched.getY() + 0.2, behindZ, 12, 0.35, 0.5, 0.35, 0.015);
+                    world.spawnParticles(ParticleTypes.LARGE_SMOKE, behindX, watched.getY() + 0.4, behindZ, 3, 0.2, 0.3, 0.2, 0.005);
+                    world.playSound(null, presence, SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 0.85f, 0.55f);
+                    state.fear(1);
+                    state.awareness(1);
+                    watched.sendMessage(Text.literal(state.stage() >= 4
+                        ? "§8Something was standing behind you."
+                        : "§7You feel watched."), true);
                     state.lastStalker(world.getTime());
                 }
             }
