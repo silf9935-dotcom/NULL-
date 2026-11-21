@@ -6,6 +6,8 @@ import dev.nullremnant.state.StateAccess;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -44,6 +46,11 @@ public final class MemorySystem {
             RemnantState memory = StateAccess.get(server);
             memory.intrusion(1);
             memory.awareness(1);
+            if (blockEntity == null && !blockState.isAir() && blockState.getFluidState().isEmpty()
+                    && blockState.isSolidBlock(world, pos)) {
+                String blockId = Registries.BLOCK.getId(blockState.getBlock()).toString();
+                if (isMimicableBlock(blockId)) memory.rememberBlock(blockId, pos.getX(), pos.getY(), pos.getZ());
+            }
             int count = memory.intrusion();
             if (count > 0 && count % 128 == 0 && memory.stage() >= 2) {
                 String[] lines = memory.stage() >= 4
@@ -67,6 +74,18 @@ public final class MemorySystem {
             }
             if (count > 0 && count % 256 == 0) memory.memoryAnchor(serverPlayer.getBlockX(), serverPlayer.getBlockY(), serverPlayer.getBlockZ());
         });
+    }
+
+    private static boolean isMimicableBlock(String id) {
+        return id.startsWith("minecraft:stone") || id.startsWith("minecraft:deepslate")
+            || id.startsWith("minecraft:dirt") || id.startsWith("minecraft:grass_block")
+            || id.startsWith("minecraft:oak_") || id.startsWith("minecraft:spruce_")
+            || id.startsWith("minecraft:birch_") || id.startsWith("minecraft:dark_oak_")
+            || id.startsWith("minecraft:acacia_") || id.startsWith("minecraft:jungle_")
+            || id.startsWith("minecraft:cherry_") || id.startsWith("minecraft:mangrove_")
+            || id.endsWith("_planks") || id.endsWith("_log") || id.endsWith("_wood")
+            || id.endsWith("_wool") || id.endsWith("_concrete") || id.endsWith("_terracotta")
+            || id.endsWith("_bricks") || id.equals("minecraft:glass") || id.equals("minecraft:obsidian");
     }
 
     public static void tick(ServerWorld world) {
@@ -115,6 +134,27 @@ public final class MemorySystem {
                         world.updateListeners(echo, world.getBlockState(echo), world.getBlockState(echo), 3);
                         state.doorEchoPlaced(true);
                         player.sendMessage(Text.literal(state.stage() >= 4 ? "§4It remembers how you enter." : "§8A familiar sound returns."), false);
+                    }
+                }
+                break;
+            }
+        }
+
+        if (state.stage() >= 4 && !state.buildEchoPlaced() && !state.rememberedBlockId().isEmpty()) {
+            BlockPos remembered = new BlockPos(state.rememberedBlockX(), state.rememberedBlockY(), state.rememberedBlockZ());
+            for (ServerPlayerEntity player : world.getPlayers()) {
+                if (!player.getBlockPos().isWithinDistance(remembered, 10.0)) continue;
+                Identifier id = Identifier.tryParse(state.rememberedBlockId());
+                if (id == null) { state.buildEchoPlaced(true); break; }
+                var block = Registries.BLOCK.get(id);
+                var mimicState = block.getDefaultState();
+                BlockPos target = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, remembered.add(1, 0, 1));
+                if (world.isChunkLoaded(target) && world.getBlockState(target).isAir()
+                        && world.getBlockState(target.down()).isSolid()
+                        && mimicState.isSolidBlock(world, target) && mimicState.getFluidState().isEmpty()) {
+                    if (world.setBlockState(target, mimicState)) {
+                        state.buildEchoPlaced(true);
+                        player.sendMessage(Text.literal("§4Something rebuilt a piece of what you removed."), false);
                     }
                 }
                 break;
