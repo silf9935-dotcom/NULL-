@@ -11,11 +11,11 @@ public final class HorrorDirector {
     private HorrorDirector() {}
 
     public static void tick(ServerWorld world) {
-        if (!RemnantConfig.enabled || world.getPlayers().isEmpty()) return;
+        if (!RemnantConfig.enabled || world.getPlayers().isEmpty() || world.getTime()%1200L!=0) return;
 
         RemnantState state = StateAccess.get(world);
         int stage = state.stage();
-        if (stage < 1) return;
+        if (stage < 1 || world.getTime()-state.lastHorror()<1200L) return;\n        state.lastHorror(world.getTime());
 
         // The regular narrative event already owns this tick. Avoid stacking two
         // unrelated messages at the exact same moment.
