@@ -27,7 +27,14 @@ public final class RemnantEvents {
   if(!world.getPlayers().isEmpty())AnomalyEvents.tryTrigger(world,world.getPlayers().get(0));
  }
  private static int stage(int d){return d<3?0:d<10?1:d<15?2:d<21?3:4;}private static double chance(int s){return new double[]{.10,.24,.40,.52,.64}[s];}
- private static void announce(ServerWorld w,int s){String[] m={"","","§7Something in this world remembers.","§8You are no longer alone.","§cThe world has begun to repeat.","§4The save is not yours alone."};if(s>0)RemnantMod.tell(w,m[s]);if(s==4){RemnantState state=StateAccess.get(w);if(!state.finaleStarted()){state.finaleStarted(true);state.intrusion(10);RemnantMod.tell(w,"§4It has learned where you began.");RemnantMod.tell(w,"§8The next door may not lead back.");}}}
+ private static void announce(ServerWorld w,int s){String[] m = {
+            "§7The world feels slightly wrong.",
+            "§8Something in this world remembers.",
+            "§8You are no longer alone.",
+            "§cThe world has begun to repeat.",
+            "§4The save is not yours alone."
+        };
+        if (s > 0) RemnantMod.tell(w, m[Math.min(s, m.length - 1)]);if(s==4){RemnantState state=StateAccess.get(w);if(!state.finaleStarted()){state.finaleStarted(true);state.intrusion(10);RemnantMod.tell(w,"§4It has learned where you began.");RemnantMod.tell(w,"§8The next door may not lead back.");}}}
  private static void sleepCheck(ServerWorld w,RemnantState s,long t){if(t%100L!=0||s.lastSleep()==t)return;java.util.List<ServerPlayerEntity> sleepers=w.getPlayers().stream().filter(ServerPlayerEntity::isSleeping).toList();if(sleepers.isEmpty())return;s.lastSleep(t);if(!RemnantConfig.nightmares||s.day()<3||RNG.nextDouble()>=.30)return;ServerPlayerEntity p=sleepers.get(RNG.nextInt(sleepers.size()));s.fear(2);w.playSound(null,p.getBlockPos(),SoundEvents.ENTITY_ENDERMAN_STARE,SoundCategory.AMBIENT,0.18f,0.55f);p.wakeUp(false,false);p.sendMessage(Text.literal("§8You cannot remember falling asleep."),false);if(!s.hasSeenNightmare()){s.nightmareSeen();p.sendMessage(Text.literal("§7A door stands somewhere in the dark."),false);p.sendMessage(Text.literal("§8Behind it, someone is copying your movements."),false);}else if(s.stage()>=3){p.sendMessage(Text.literal("§4You wake up facing the wrong direction."),false);p.sendMessage(Text.literal("§8The door is gone. The feeling remains."),false);}else p.sendMessage(Text.literal("§7You dream of a door in a cave."),false);}
  private static void early(ServerWorld w,int r){if(r<35)RemnantMod.tell(w,"§7The wind sounds like footsteps for a moment.");else if(r<70)RemnantMod.tell(w,"§7A chunk seems to take longer than usual to settle.");else RemnantMod.tell(w,"§7You hear a wooden door somewhere far away.");}
  private static void awakening(ServerWorld w,int r){if(r<25)RemnantMod.tell(w,"§8You hear footsteps beyond the trees.");else if(r<50)cross(w);else if(r<75)sign(w,"I remember this place.");else RemnantMod.tell(w,"§7Something has changed, but you cannot find what.");}
@@ -60,7 +67,7 @@ public final class RemnantEvents {
    }
   }
   if(emitted==0)return;
-  w.playSound(null,center,SoundEvents.AMBIENT_CAVE,SoundCategory.AMBIENT,0.65f,0.65f);
+  w.playSound(null,center,SoundEvents.AMBIENT_CAVE.value(),SoundCategory.AMBIENT,0.65f,0.65f);
   player.sendMessage(Text.literal("§8Something has been placed nearby."),false);
  }
  private static void sign(ServerWorld w,String text){ServerPlayerEntity p=w.getPlayers().get(RNG.nextInt(w.getPlayers().size()));BlockPos pos=w.getTopPosition(Heightmap.Type.MOTION_BLOCKING,p.getBlockPos().add(RNG.nextInt(9)-4,0,RNG.nextInt(9)-4));if(!w.getBlockState(pos).isAir()||!w.getBlockState(pos.down()).isSolid())return;w.setBlockState(pos,Blocks.OAK_SIGN.getDefaultState());if(w.getBlockEntity(pos) instanceof SignBlockEntity be){be.changeText(signText->signText.withMessage(0,Text.literal(text)).withMessage(1,Text.empty()),true);be.markDirty();w.updateListeners(pos,w.getBlockState(pos),w.getBlockState(pos),3);}}
