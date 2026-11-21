@@ -18,8 +18,10 @@ public final class AnomalyEvents {
         if (stage < 2 || now - state.lastAnomaly() < 1200L || state.lastEvent() == now) return;
         state.lastAnomaly(now);
 
-        int chance = stage >= 4 ? 12 : stage == 3 ? 7 : 3;
-        int scaledChance = chance * RemnantConfig.eventFrequency / 100;
+        int baseChance = stage >= 4 ? 12 : stage == 3 ? 7 : 3;
+        int pressure = Math.min(6, state.awareness() / 100 + state.fear() / 50);
+        int scaledChance = Math.min(100,
+            (baseChance + pressure) * RemnantConfig.eventFrequency / 100);
         if (world.getRandom().nextInt(100) >= scaledChance) return;
 
         ServerPlayerEntity recipient = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
