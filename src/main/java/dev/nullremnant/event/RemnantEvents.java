@@ -43,7 +43,13 @@ public final class RemnantEvents {
 
         if (now % EVENT_INTERVAL == 0L && state.lastEvent() != now) {
             state.lastEvent(now);
-            double chance = stageEventChance(currentStage) * RemnantConfig.eventFrequency / 100.0;
+            double pressure = Math.min(0.18,
+                state.awareness() / 2500.0
+                    + state.fear() / 2000.0
+                    + state.intrusion() / 10_000.0);
+            double chance = Math.min(1.0,
+                (stageEventChance(currentStage) + pressure)
+                    * RemnantConfig.eventFrequency / 100.0);
             if (RNG.nextDouble() < chance) {
                 dispatchStageEvent(world, currentStage, RNG.nextInt(100));
             }
