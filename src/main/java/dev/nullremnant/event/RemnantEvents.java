@@ -19,7 +19,7 @@ public final class RemnantEvents {
  public static void tick(ServerWorld world){
   if(!RemnantConfig.enabled||world.getPlayers().isEmpty())return;RemnantState s=StateAccess.get(world);long t=world.getTime();int d=(int)(t/24000L);
   if(d>s.day())s.day(d);int stage=stage(d);if(stage!=s.stage()){s.stage(stage);announce(world,stage);}
-  for(ServerPlayerEntity p:world.getPlayers())sleepCheck(world,p,s,t);
+  sleepCheck(world,s,t);
   if(t%INTERVAL==0&&s.lastEvent()!=t){s.lastEvent(t);if(RNG.nextDouble()<=chance(stage)*RemnantConfig.eventFrequency/100.0){int roll=RNG.nextInt(100);switch(stage){case 0->early(world,roll);case 1->awakening(world,roll);case 2->aggression(world,roll);case 3->reality(world,roll);default->finale(world,roll);}}}
   HorrorDirector.tick(world);
   StalkerDirector.tick(world);
