@@ -26,7 +26,7 @@ public final class RemnantItems {
     public static final ItemGroup ITEM_GROUP = Registry.register(
         Registries.ITEM_GROUP,
         new Identifier("null_remnant", "main"),
-        FabricItemGroup.builder(new Identifier("null_remnant", "main"))
+        FabricItemGroup.builder()
             .displayName(Text.translatable("itemGroup.null_remnant"))
             .icon(() -> new ItemStack(REMNANT_SPAWN_EGG))
             .entries((context, entries) -> entries.add(REMNANT_SPAWN_EGG))
