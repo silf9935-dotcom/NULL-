@@ -8,6 +8,7 @@ import net.minecraft.util.TypeFilter;
 
 public final class RemnantHud {
     private static long lastWhisper = -1L;
+    private static net.minecraft.client.world.ClientWorld lastWorld;
     private static int whisper = -1;
     private static final String[] LINES = {
         "hud.null_remnant.whisper1",
@@ -31,6 +32,11 @@ public final class RemnantHud {
             ).isEmpty();
             if (!near) return;
 
+            if (lastWorld != client.world) {
+                lastWorld = client.world;
+                lastWhisper = -1L;
+                whisper = -1;
+            }
             long now = client.world.getTime();
             if (whisper < 0 || now < lastWhisper || now - lastWhisper > 100L) {
                 lastWhisper = now;
