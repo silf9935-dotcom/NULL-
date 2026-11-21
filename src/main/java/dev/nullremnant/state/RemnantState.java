@@ -20,11 +20,11 @@ public final class RemnantState extends PersistentState {
 
     public static RemnantState load(NbtCompound n) {
         RemnantState s = new RemnantState();
-        s.day = n.getInt("day");
-        s.stage = n.getInt("stage");
-        s.fear = n.getInt("fear");
-        s.awareness = n.getInt("awareness");
-        s.intrusion = n.getInt("intrusion");
+        s.day = Math.max(0, n.getInt("day"));
+        s.stage = Math.max(0, Math.min(4, n.getInt("stage")));
+        s.fear = clampCounter(n.getInt("fear"));
+        s.awareness = clampCounter(n.getInt("awareness"));
+        s.intrusion = clampCounter(n.getInt("intrusion"));
         s.lastEvent = n.getLong("lastEvent");
         s.lastSleep = n.getLong("lastSleep");
         s.nightmareSeen = n.getBoolean("nightmareSeen");
@@ -136,11 +136,20 @@ public final class RemnantState extends PersistentState {
     public int shadowSteps() { return shadowSteps; }
     public String shadowTargetId() { return shadowTargetId; }
 
-    public void day(int v) { day = v; markDirty(); }
-    public void stage(int v) { stage = v; markDirty(); }
-    public void fear(int v) { fear = Math.max(0, fear + v); markDirty(); }
-    public void awareness(int v) { awareness = Math.max(0, awareness + v); markDirty(); }
-    public void intrusion(int v) { intrusion = Math.max(0, intrusion + v); markDirty(); }
+    private static int clampCounter(int value) {
+        return Math.max(0, Math.min(1_000_000, value));
+    }
+
+    private static int addCounter(int current, int amount) {
+        long next = (long) current + amount;
+        return (int) Math.max(0L, Math.min(1_000_000L, next));
+    }
+
+    public void day(int v) { day = Math.max(0, v); markDirty(); }
+    public void stage(int v) { stage = Math.max(0, Math.min(4, v)); markDirty(); }
+    public void fear(int v) { fear = addCounter(fear, v); markDirty(); }
+    public void awareness(int v) { awareness = addCounter(awareness, v); markDirty(); }
+    public void intrusion(int v) { intrusion = addCounter(intrusion, v); markDirty(); }
     public void lastEvent(long v) { lastEvent = v; markDirty(); }
     public void lastSleep(long v) { lastSleep = v; markDirty(); }
     public void lastStalker(long v) { lastStalker = v; markDirty(); }
