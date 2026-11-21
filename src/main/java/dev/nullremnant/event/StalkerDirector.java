@@ -55,18 +55,20 @@ public final class StalkerDirector {
             int radius = 13 + world.getRandom().nextInt(14);
             int dx = (int) Math.round(-Math.sin(angle) * radius);
             int dz = (int) Math.round(Math.cos(angle) * radius);
-            BlockPos feet = player.getBlockPos().add(dx, 0, dz);
-            if (!world.isChunkLoaded(feet) || !world.getBlockState(feet).isAir()
-                    || !world.getBlockState(feet.up()).isAir()
-                    || !world.getBlockState(feet.down()).isSolid()
-                    || world.getLightLevel(feet) > 7
-                    || player.getBlockPos().isWithinDistance(feet, 12.0)) continue;
+            for (int verticalOffset = -2; verticalOffset <= 2; verticalOffset++) {
+                BlockPos feet = player.getBlockPos().add(dx, verticalOffset, dz);
+                if (!world.isChunkLoaded(feet) || !world.getBlockState(feet).isAir()
+                        || !world.getBlockState(feet.up()).isAir()
+                        || !world.getBlockState(feet.down()).isSolid()
+                        || world.getLightLevel(feet) > 7
+                        || player.getBlockPos().isWithinDistance(feet, 12.0)) continue;
 
-            Vec3d start = player.getCameraPosVec(1.0f);
-            Vec3d end = new Vec3d(feet.getX() + 0.5, feet.getY() + 1.45, feet.getZ() + 0.5);
-            RaycastContext sightCheck = new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER,
-                RaycastContext.FluidHandling.NONE, player);
-            if (world.raycast(sightCheck).getType() == HitResult.Type.BLOCK) return feet;
+                Vec3d start = player.getCameraPosVec(1.0f);
+                Vec3d end = new Vec3d(feet.getX() + 0.5, feet.getY() + 1.45, feet.getZ() + 0.5);
+                RaycastContext sightCheck = new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER,
+                    RaycastContext.FluidHandling.NONE, player);
+                if (world.raycast(sightCheck).getType() == HitResult.Type.BLOCK) return feet;
+            }
         }
         return null;
     }
