@@ -29,7 +29,8 @@ public final class RemnantState extends PersistentState {
         s.memoryX = n.getInt("memoryX");
         s.memoryY = n.getInt("memoryY");
         s.memoryZ = n.getInt("memoryZ");
-        s.doorInteractions = n.getInt("doorInteractions");\n        s.doorRepeatCount = n.getInt("doorRepeatCount");
+        s.doorInteractions = n.getInt("doorInteractions");
+        s.doorRepeatCount = n.getInt("doorRepeatCount");
         s.doorX = n.getInt("doorX");
         s.doorY = n.getInt("doorY");
         s.doorZ = n.getInt("doorZ");
@@ -60,7 +61,8 @@ public final class RemnantState extends PersistentState {
         n.putInt("memoryX", memoryX);
         n.putInt("memoryY", memoryY);
         n.putInt("memoryZ", memoryZ);
-        n.putInt("doorInteractions", doorInteractions);\n        n.putInt("doorRepeatCount", doorRepeatCount);
+        n.putInt("doorInteractions", doorInteractions);
+        n.putInt("doorRepeatCount", doorRepeatCount);
         n.putInt("doorX", doorX);
         n.putInt("doorY", doorY);
         n.putInt("doorZ", doorZ);
@@ -102,7 +104,8 @@ public final class RemnantState extends PersistentState {
     public int rememberedAreaX() { return rememberedAreaX; }
     public int rememberedAreaZ() { return rememberedAreaZ; }
     public boolean rememberedAreaSet() { return rememberedAreaSet; }
-    public long lastAreaEcho() { return lastAreaEcho; }\n    public boolean areaEchoPlaced() { return areaEchoPlaced; }
+    public long lastAreaEcho() { return lastAreaEcho; }
+    public boolean areaEchoPlaced() { return areaEchoPlaced; }
 
     public void day(int v) { day = v; markDirty(); }
     public void stage(int v) { stage = v; markDirty(); }
@@ -138,5 +141,6 @@ public final class RemnantState extends PersistentState {
         else if (areaRevisits == 0) { rememberedAreaX = x; rememberedAreaZ = z; rememberedAreaSet = true; }
         lastAreaX = x; lastAreaZ = z; markDirty();
     }
-    public void lastAreaEcho(long v) { lastAreaEcho = v; markDirty(); }\n    public void areaEchoPlaced(boolean v) { areaEchoPlaced = v; markDirty(); }
+    public void lastAreaEcho(long v) { lastAreaEcho = v; markDirty(); }
+    public void areaEchoPlaced(boolean v) { areaEchoPlaced = v; markDirty(); }
 }
