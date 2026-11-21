@@ -27,7 +27,7 @@ public final class MemorySystem {
                 if (block.isIn(BlockTags.DOORS) || block.isIn(BlockTags.TRAPDOORS) || block.isIn(BlockTags.FENCE_GATES)) {
                     RemnantState state = StateAccess.get(server);
                     state.recordDoor(hit.getBlockPos().getX(), hit.getBlockPos().getY(), hit.getBlockPos().getZ());
-                    if (state.stage() >= 2 && state.doorRepeatCount() >= 4 && state.doorRepeatCount() % 3 == 0) {
+                    if (state.stage() >= 2 && state.doorRepeatCount() >= 4 && (state.doorRepeatCount() == 4 || state.doorRepeatCount() % 3 == 0)) {
                         int visits = state.doorRepeatCount();
                         String echo = visits >= 9 && state.stage() >= 4
                             ? "§4This door has become part of the pattern."
