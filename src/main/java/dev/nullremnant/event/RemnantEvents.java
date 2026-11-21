@@ -1,4 +1,5 @@
 package dev.nullremnant.event;
+import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.RemnantMod;
 import dev.nullremnant.state.RemnantState;
 import dev.nullremnant.state.StateAccess;
@@ -16,7 +17,7 @@ public final class RemnantEvents {
  private static final Random RNG=new Random();private static final long INTERVAL=12000L;
  private RemnantEvents(){}
  public static void tick(ServerWorld world){
-  if(world.getPlayers().isEmpty())return;RemnantState s=StateAccess.get(world);long t=world.getTime();int d=(int)(t/24000L);
+  if(!RemnantConfig.enabled||world.getPlayers().isEmpty())return;RemnantState s=StateAccess.get(world);long t=world.getTime();int d=(int)(t/24000L);
   if(d>s.day())s.day(d);int stage=stage(d);if(stage!=s.stage()){s.stage(stage);announce(world,stage);}
   for(ServerPlayerEntity p:world.getPlayers())sleepCheck(world,p,s,t);
   if(t%INTERVAL==0&&s.lastEvent()!=t){s.lastEvent(t);if(RNG.nextDouble()<=chance(stage)){int roll=RNG.nextInt(100);switch(stage){case 0->early(world,roll);case 1->awakening(world,roll);case 2->aggression(world,roll);case 3->reality(world,roll);default->finale(world,roll);}}}
