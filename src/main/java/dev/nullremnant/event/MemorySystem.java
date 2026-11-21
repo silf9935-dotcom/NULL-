@@ -100,11 +100,13 @@ public final class MemorySystem {
             if (world.isChunkLoaded(place) && world.getBlockState(place).isAir() && world.getBlockState(place.down()).isSolid()) {
                 world.setBlockState(place, Blocks.OAK_SIGN.getDefaultState());
                 if (world.getBlockEntity(place) instanceof SignBlockEntity sign) {
-                    sign.changeText(text -> text.withMessage(0, Text.literal("You have been here before.")).withMessage(1, Text.literal("It remembers.")), true);
+                    String firstLine = state.stage() >= 4 ? "It learned your hands." : "You have been here before.";
+                    String secondLine = state.stage() >= 4 ? "It can build now." : "It remembers.";
+                    sign.changeText(text -> text.withMessage(0, Text.literal(firstLine)).withMessage(1, Text.literal(secondLine)), true);
                     sign.markDirty();
                     world.updateListeners(place, world.getBlockState(place), world.getBlockState(place), 3);
                     state.memoryEchoPlaced(true);
-                    player.sendMessage(Text.literal("§8A memory has returned to this place."), false);
+                    player.sendMessage(Text.literal(state.stage() >= 4 ? "§4It has changed what it remembers." : "§8A memory has returned to this place."), false);
                 }
             }
             return;
