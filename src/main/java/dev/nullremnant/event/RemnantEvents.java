@@ -34,6 +34,34 @@ public final class RemnantEvents {
  private static void aggression(ServerWorld w,int r){if(r<20)sign(w,"You always close the door.");else if(r<40)RemnantMod.tell(w,"§8There is a figure at the edge of the fog.");else if(r<60)RemnantMod.tell(w,"§7A door opens somewhere nearby.");else if(r<80){ServerPlayerEntity player=w.getPlayers().get(w.getRandom().nextInt(w.getPlayers().size()));player.sendMessage(Text.literal("§8"+player.getName().getString()+" §7: You came back."),false);}else RemnantMod.tell(w,"§7The save takes longer than it should.");}
  private static void reality(ServerWorld w,int r){if(r<20)sign(w,"You have built this before.");else if(r<40)RemnantMod.tell(w,"§8The landscape looks strangely familiar.");else if(r<60)cross(w);else if(r<80)RemnantMod.tell(w,"§7You hear your own footsteps, a few seconds late.");else RemnantMod.tell(w,"§8The world repeats a sound it should not know.");}
  private static void finale(ServerWorld w,int r){if(r<25)sign(w,"I know how to build a home now.");else if(r<50)RemnantMod.tell(w,"§4You hear a door opening inside your house.");else if(r<75)RemnantMod.tell(w,"§8There is someone standing where you first arrived.");else RemnantMod.tell(w,"§4There is only one player.");}
- private static void cross(ServerWorld w){ServerPlayerEntity p=w.getPlayers().get(RNG.nextInt(w.getPlayers().size()));BlockPos pos=w.getTopPosition(Heightmap.Type.MOTION_BLOCKING,p.getBlockPos().add(RNG.nextInt(17)-8,0,RNG.nextInt(17)-8));if(!w.getBlockState(pos).isAir()||!w.getBlockState(pos.down()).isSolid())return;for(int y=0;y<3;y++)if(!w.getBlockState(pos.up(y)).isAir())return;if(!w.getBlockState(pos.up().east()).isAir()||!w.getBlockState(pos.up().west()).isAir())return;for(int y=0;y<3;y++)w.setBlockState(pos.up(y),Blocks.BEDROCK.getDefaultState());w.setBlockState(pos.up().east(),Blocks.BEDROCK.getDefaultState());w.setBlockState(pos.up().west(),Blocks.BEDROCK.getDefaultState());RemnantMod.tell(w,"§8Something has been placed nearby.");}
+ private static void cross(ServerWorld w){
+  ServerPlayerEntity player=w.getPlayers().get(RNG.nextInt(w.getPlayers().size()));
+  BlockPos sample=player.getBlockPos().add(RNG.nextInt(17)-8,0,RNG.nextInt(17)-8);
+  if(!w.isChunkLoaded(sample))return;
+  BlockPos center=w.getTopPosition(Heightmap.Type.MOTION_BLOCKING,sample);
+  if(!w.isChunkLoaded(center))return;
+  int emitted=0;
+  for(int offset=-2;offset<=2;offset++){
+   BlockPos point=center.add(offset,0,0);
+   if(w.isChunkLoaded(point)&&w.getBlockState(point).isAir()
+      &&w.getBlockState(point.up()).isAir()&&w.getBlockState(point.down()).isSolid()){
+    double x=point.getX()+0.5,y=point.getY()+0.15,z=point.getZ()+0.5;
+    w.spawnParticles(net.minecraft.particle.ParticleTypes.LARGE_SMOKE,x,y,z,5,0.18,0.12,0.18,0.005);
+    w.spawnParticles(net.minecraft.particle.ParticleTypes.SMOKE,x,y,z,8,0.22,0.18,0.22,0.008);
+    emitted++;
+   }
+   point=center.add(0,0,offset);
+   if(w.isChunkLoaded(point)&&w.getBlockState(point).isAir()
+      &&w.getBlockState(point.up()).isAir()&&w.getBlockState(point.down()).isSolid()){
+    double x=point.getX()+0.5,y=point.getY()+0.15,z=point.getZ()+0.5;
+    w.spawnParticles(net.minecraft.particle.ParticleTypes.LARGE_SMOKE,x,y,z,5,0.18,0.12,0.18,0.005);
+    w.spawnParticles(net.minecraft.particle.ParticleTypes.SMOKE,x,y,z,8,0.22,0.18,0.22,0.008);
+    emitted++;
+   }
+  }
+  if(emitted==0)return;
+  w.playSound(null,center,SoundEvents.AMBIENT_CAVE,SoundCategory.AMBIENT,0.65f,0.65f);
+  player.sendMessage(Text.literal("§8Something has been placed nearby."),false);
+ }
  private static void sign(ServerWorld w,String text){ServerPlayerEntity p=w.getPlayers().get(RNG.nextInt(w.getPlayers().size()));BlockPos pos=w.getTopPosition(Heightmap.Type.MOTION_BLOCKING,p.getBlockPos().add(RNG.nextInt(9)-4,0,RNG.nextInt(9)-4));if(!w.getBlockState(pos).isAir()||!w.getBlockState(pos.down()).isSolid())return;w.setBlockState(pos,Blocks.OAK_SIGN.getDefaultState());if(w.getBlockEntity(pos) instanceof SignBlockEntity be){be.changeText(signText->signText.withMessage(0,Text.literal(text)).withMessage(1,Text.empty()),true);be.markDirty();w.updateListeners(pos,w.getBlockState(pos),w.getBlockState(pos),3);}}
 }
