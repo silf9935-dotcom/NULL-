@@ -73,6 +73,20 @@ public final class MemorySystem {
         if (!RemnantConfig.enabled || world.getTime() % 200L != 0 || world.getPlayers().isEmpty()) return;
         RemnantState state = StateAccess.get(world);
 
+        if (world.getTime() % 600L == 0) {
+            ServerPlayerEntity sampler = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
+            state.sampleArea(sampler.getBlockX() >> 4, sampler.getBlockZ() >> 4);
+            if (state.stage() >= 3 && state.areaRevisits() >= 3 && state.areaRevisits() % 3 == 0
+                    && (state.lastAreaEcho() < 0 || world.getTime() - state.lastAreaEcho() >= 24000L)) {
+                sampler.sendMessage(Text.literal(state.stage() >= 4
+                    ? "§4You returned to the place it kept."
+                    : "§8This place feels remembered."), false);
+                state.fear(1);
+                state.awareness(1);
+                state.lastAreaEcho(world.getTime());
+            }
+        }
+
         if (state.stage() >= 3 && state.doorInteractions() >= 8 && !state.doorEchoPlaced()) {
             BlockPos rememberedDoor = new BlockPos(state.doorX(), state.doorY(), state.doorZ());
             for (ServerPlayerEntity player : world.getPlayers()) {
