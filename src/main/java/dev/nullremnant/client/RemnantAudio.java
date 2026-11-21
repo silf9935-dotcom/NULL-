@@ -21,7 +21,7 @@ public final class RemnantAudio {
             ).isEmpty();
             if (!distantPresence) return;
             lastCue = time;
-            client.player.playSound(SoundEvents.ENTITY_ENDERMAN_STARE, 0.12f, 0.62f + client.world.random.nextFloat() * 0.12f);
+            client.player.playSound(SoundEvents.ENTITY_ENDERMAN_STARE, 0.12f, 0.68f);
         });
     }
 }
