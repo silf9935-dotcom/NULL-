@@ -1,70 +1,106 @@
 # NULL: The Remnant
 
-Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
+A psychological-horror survival mod for **Minecraft Java 1.20.1**, **Fabric**, and **Java 17**.
 
-## Implemented
-- Fabric entrypoint and per-world persistent state.
-- Five escalation stages with day thresholds: 0–2, 3–9, 10–14, 15–20, 21+.
-- Narrative event pools: whispers, messages, lore signs, bedrock-cross anomaly, sleep interruption.
-- Horror director and rare environment anomaly hooks with config-aware chance scaling, randomized player targeting, and persistent per-director cooldowns.
-- Registered Remnant entity with target/wander/look goals, gaze-triggered retreat, and staged aggression (melee attack is enabled only at stage 5); it despawns after a long idle period.
-- Stalker director can spawn the entity at a distance beginning at stage 2.
-- Player block-break activity contributes to memory/awareness and produces stage-escalating feedback. Repeated door interactions and revisiting remembered chunk-sized areas can trigger personal echoes; spatial memory persists with the world.
-- At stage 4+, the Remnant can persist a safe, ordinary solid block the player broke (excluding block entities and fluids) and, once near that remembered location, reproduce a single copy on an empty supported position. The mimic block memory and one-time echo flag persist with the world. Narrative echoes use the actual selected player's name.
-- At stage 3+, a persistent memory anchor may produce a sign echo when the player revisits that location.
-- Nightmare interruptions select from players who are actually sleeping (rather than always favoring the first server player); the first interruption includes a unique hint and later interruptions escalate at higher stages.
-- Stalker appearance and nightmare cues use vanilla Enderman audio as a temporary sound placeholder.
-- Stage 5 transition records a one-time finale flag and emits a finale introduction.
-- Custom humanoid model with idle/walk motion and client renderer (texture currently borrowed from vanilla zombie; model UVs are prototype quality).
-- Nearby entity whisper HUD cue, shown only while the Remnant is close.
-- Client-side proximity audio cue with a restrained cooldown.
-- Door interaction memory; at later stages, revisiting a remembered door may produce a one-time sign echo.
-- Commands: `/remnant lore`; operator-only `/remnant status`, `/remnant spawn`, and `/remnant reload`.
-- English/Russian language files, event catalog and lore archive.
-- JSON configuration file generated in the Minecraft config folder: master enable, nightmare toggle, subtle anomaly toggle, event/stalker frequency sliders (0–200%).
-- GitHub Actions build workflow.
+The Remnant is an imitation of a player reconstructed from traces left in a world. It observes, remembers, and gradually learns to reproduce the player's routines. Horror effects are deliberately in-game: the mod does not inspect personal files, access the operating system, modify system settings, or interfere with the ability to exit the game.
+
+## Current gameplay
+
+### World progression
+
+The world advances through five narrative stages. The internal stage values are zero-based; the player-facing stage numbers are one-based.
+
+| Player-facing stage | Internal value | World age | Behavior |
+| --- | ---: | --- | --- |
+| Quiet | 0 | Days 0–2 | Sparse environmental hints; no entity stalking. |
+| Awakening | 1 | Days 3–9 | Distant sounds, first traces, and early memory feedback. |
+| Aggression | 2 | Days 10–14 | The Remnant can begin appearing behind environmental cover; it stalks rather than attacks. |
+| Fracture | 3 | Days 15–20 | More frequent anomalies, remembered places, and non-damaging shadow manifestations. |
+| Finale | 4 | Day 21 onward | The Remnant becomes more persistent and can attack; world-memory echoes intensify. |
+
+Progression is based on the world's age in ticks, not the player's sleeping count. Sleeping can trigger a separate nightmare interruption, but does not skip progression days.
+
+### The Remnant
+
+- Registered server entity with a custom humanoid model and a dedicated remnant.png texture.
+- It can spawn at a distance in a dark location hidden from the selected player's direct line of sight.
+- Before the finale, it follows and watches without initiating melee attacks.
+- Sustained direct eye contact makes it retreat; it tries to move behind actual block cover and becomes visible again after its retreat window.
+- At the finale stage, it can use melee attacks.
+- It has custom Enderman-like sound cues, does not burn in daylight, does not drop loot, and is removed after a long period without a target.
+- Retreat timers, target-relative retreat coordinates, and lifetime tracking are saved with the entity.
+
+### Memory and environmental events
+
+- Block-breaking activity increases world intrusion and awareness.
+- Selected ordinary solid blocks can be remembered and later reproduced once as a small, one-block imitation.
+- Revisiting remembered chunk areas can trigger narrative echoes.
+- Repeated door interactions are tracked and can produce a one-time sign echo.
+- A short-lived smoke shadow can appear behind a player in dark conditions and advance a few times toward them; it does not collide or deal damage.
+- Rare smoke manifestations and cave-audio cues provide distant-presence events without permanently changing terrain.
+- Sleep interruptions only target players who are actually sleeping.
+- Event and stalker cooldowns are stored separately, and persistent state is saved per world dimension.
+
+### Client presentation
+
+- Custom entity renderer and model.
+- Proximity HUD whisper while the Remnant is nearby.
+- Restrained proximity audio cue.
+- English and Russian language resource files.
+
+### Commands
+
+- /remnant help — show available commands.
+- /remnant lore — read the current chapter.
+- /remnant status — operator-only world and entity status.
+- /remnant spawn — operator-only safe test spawn near the command sender.
+- /remnant despawn — operator-only removal of Remnant entities in the current dimension.
+- /remnant reload — operator-only reload of the JSON configuration.
+
+### Configuration
+
+The file config/null_remnant.json is created on first launch.
+
+| Key | Type | Default | Meaning |
+| --- | --- | ---: | --- |
+| enabled | boolean | true | Master switch for server-side event and memory systems. |
+| nightmares | boolean | true | Enable sleep interruptions. |
+| subtleAnomalies | boolean | true | Enable ambient anomaly events. |
+| eventFrequency | integer | 100 | Event frequency percentage, clamped to 0–200. |
+| stalkerFrequency | integer | 100 | Remnant entity spawn frequency percentage, clamped to 0–200. |
+
+Use /remnant reload to reload the configuration without restarting the game. A value of 0 suppresses the corresponding random event director.
 
 ## Build
-Java 17 and Gradle 8.6:
-```sh
+
+Requirements: Java 17, Gradle 8.6, Minecraft 1.20.1 mappings and Fabric dependencies declared in gradle.properties.
+
+Run:
+
+~~~sh
 gradle build
-```
-A GitHub Actions workflow runs this on pushes and pull requests. The build has not yet been verified in this session.
+~~~
 
+The GitHub Actions workflow runs gradle build on pushes to main and pull requests targeting main. Check the Actions tab for the latest verified build result.
 
-## Configuration
+## Testing checklist
 
-The file `config/null_remnant.json` is created on first launch. Values:
+- [ ] Launch a Fabric 1.20.1 client and verify the model and custom texture.
+- [ ] Create a new survival world and verify progression across all five stages.
+- [ ] Verify that stage 2 and 3 stalking does not deal damage.
+- [ ] Verify gaze detection, retreat, line-of-sight cover, reappearance, and eventual despawn.
+- [ ] Save and reload while the entity is retreating; verify it does not remain permanently invisible.
+- [ ] Verify that stage 4 enables melee behavior.
+- [ ] Verify that signs and smoke events do not overwrite existing player blocks.
+- [ ] Verify that remembered blocks are reproduced only on safe, empty, supported positions.
+- [ ] Verify that world state and cooldowns persist across server restarts.
+- [ ] Test multiplayer targeting, sleep interruptions, and command permissions.
+- [ ] Test each configuration option, including zero and maximum event frequencies.
 
-- `enabled`: disables the event directors and memory hooks when false.
-- `nightmares`: controls sleep interruptions.
-- `subtleAnomalies`: controls the small ambient anomaly director.
-- `eventFrequency`: event frequency percentage (0–200; 100 is default).
-- `stalkerFrequency`: stalker spawn frequency percentage (0–200; 100 is default).
+## Design boundaries
 
-Use `/remnant reload` (operator permission level 2) to reload the file without restarting. `/remnant status` shows the saved day, stage, fear, and awareness; `/remnant spawn` is a testing command.
-
-## Development / testing checklist
-
-- [ ] Run `gradle build` with Java 17 and Gradle 8.6.
-- [ ] Launch a Fabric 1.20.1 client and verify the Remnant model/renderer.
-- [ ] Create a fresh survival world; verify stage progression after sleeping / advancing days.
-- [ ] Verify configuration switches and 0% frequency suppress events.
-- [ ] Verify Remnant spawning, stage-gated aggression, pursuit, gaze response, retreat, and despawn.
-- [ ] Verify signs/anomalies only occur in loaded, safe positions and do not overwrite player builds.
-- [ ] Verify save/reload persistence of stage and memory anchor.
-- [ ] Test multiplayer event messages and entity targeting.
-
-## Not yet implemented
-- Original custom texture and custom sound assets (the model is code-defined; currently uses a vanilla texture).
-- Nightmare corridor or dream scene.
-- Client-side fog, post-processing, audio layering, HUD/GUI effects.
-- Broader action memory and multi-block structure reconstruction (current mimicry is a one-block prototype).
-- ARG puzzle chain or optional save-folder artifacts.
-- Finale, endings, config UI, accessibility controls, and gameplay tests.
-
-## Boundaries
-Horror effects remain in-game. The mod will not read personal files, access the operating system, modify system settings, or prevent the player from exiting. Any future ARG file features will be opt-in and limited to the Minecraft world save.
+All horror effects remain inside Minecraft. The mod does not read personal files, access the operating system, modify system settings, or prevent the player from leaving the game. Any future ARG-like file features must be explicitly opt-in and confined to the Minecraft world save.
 
 ## Lore
+
 The Remnant is a reconstruction of a player from corrupted world traces. It does not understand leaving; it wants to become the one who returns. It copies routines and structures until imitation becomes ownership.
