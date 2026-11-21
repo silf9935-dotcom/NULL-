@@ -26,7 +26,13 @@ public final class MemorySystem {
                     RemnantState state = StateAccess.get(server);
                     state.recordDoor(hit.getBlockPos().getX(), hit.getBlockPos().getY(), hit.getBlockPos().getZ());
                     if (state.stage() >= 2 && state.doorInteractions() % 6 == 0) {
-                        serverPlayer.sendMessage(Text.literal("§8The sound of the door lingers longer than it should."), false);
+                        int visits = state.doorInteractions();
+                        String echo = visits % 18 == 0 && state.stage() >= 4
+                            ? "§4This door has become part of the pattern."
+                            : visits % 12 == 0 && state.stage() >= 3
+                                ? "§8You remember opening this. It remembers you."
+                                : "§8The sound of the door lingers longer than it should.";
+                        serverPlayer.sendMessage(Text.literal(echo), false);
                     }
                 }
             }
@@ -40,11 +46,23 @@ public final class MemorySystem {
             memory.awareness(1);
             int count = memory.intrusion();
             if (count > 0 && count % 128 == 0 && memory.stage() >= 2) {
-                String[] lines = {
-                    "§8You hear the same sound twice.",
-                    "§7Something is learning the rhythm of your hands.",
-                    "§8The world remembers what you remove."
-                };
+                String[] lines = memory.stage() >= 4
+                    ? new String[] {
+                        "§4Every block removed makes the shape clearer.",
+                        "§8It is learning what you leave behind.",
+                        "§7Your hands are teaching it how to build."
+                    }
+                    : memory.stage() >= 3
+                        ? new String[] {
+                            "§8You hear the same sound twice.",
+                            "§7Something is learning the rhythm of your hands.",
+                            "§8The world remembers what you remove."
+                        }
+                        : new String[] {
+                            "§7A familiar sound follows your next movement.",
+                            "§8The world remembers what you remove.",
+                            "§7Something is learning the rhythm of your hands."
+                        };
                 serverPlayer.sendMessage(Text.literal(lines[server.getRandom().nextInt(lines.length)]), false);
             }
             if (count > 0 && count % 256 == 0) memory.memoryAnchor(serverPlayer.getBlockX(), serverPlayer.getBlockY(), serverPlayer.getBlockZ());
