@@ -81,11 +81,13 @@ public final class MemorySystem {
                 if (world.isChunkLoaded(echo) && world.getBlockState(echo).isAir() && world.getBlockState(echo.down()).isSolid()) {
                     world.setBlockState(echo, Blocks.OAK_SIGN.getDefaultState());
                     if (world.getBlockEntity(echo) instanceof SignBlockEntity sign) {
-                        sign.changeText(text -> text.withMessage(0, Text.literal("You opened this.")).withMessage(1, Text.literal("It was listening.")), true);
+                        String firstLine = state.stage() >= 4 ? "It learned the sound." : "You opened this.";
+                        String secondLine = state.stage() >= 4 ? "It knows the way." : "It was listening.";
+                        sign.changeText(text -> text.withMessage(0, Text.literal(firstLine)).withMessage(1, Text.literal(secondLine)), true);
                         sign.markDirty();
                         world.updateListeners(echo, world.getBlockState(echo), world.getBlockState(echo), 3);
                         state.doorEchoPlaced(true);
-                        player.sendMessage(Text.literal("§8A familiar sound returns."), false);
+                        player.sendMessage(Text.literal(state.stage() >= 4 ? "§4It remembers how you enter." : "§8A familiar sound returns."), false);
                     }
                 }
                 break;
