@@ -10,7 +10,7 @@ public final class RemnantState extends PersistentState {
     private boolean nightmareSeen, finaleStarted, memoryAnchorSet, memoryEchoPlaced, doorEchoPlaced;
     private int memoryX, memoryY, memoryZ, doorInteractions, doorRepeatCount, doorX, doorY, doorZ;
     private int lastAreaX, lastAreaZ, rememberedAreaX, rememberedAreaZ, areaRevisits;
-    private boolean areaInitialized, rememberedAreaSet;
+    private boolean areaInitialized, rememberedAreaSet, areaEchoPlaced;
     private long lastAreaEcho = -1;
 
     public static RemnantState load(NbtCompound n) {
@@ -40,7 +40,7 @@ public final class RemnantState extends PersistentState {
         s.lastAreaX = n.getInt("lastAreaX"); s.lastAreaZ = n.getInt("lastAreaZ");
         s.rememberedAreaX = n.getInt("rememberedAreaX"); s.rememberedAreaZ = n.getInt("rememberedAreaZ");
         s.areaRevisits = n.getInt("areaRevisits"); s.areaInitialized = n.getBoolean("areaInitialized");
-        s.rememberedAreaSet = n.getBoolean("rememberedAreaSet"); s.lastAreaEcho = n.getLong("lastAreaEcho");
+        s.rememberedAreaSet = n.getBoolean("rememberedAreaSet"); s.areaEchoPlaced = n.getBoolean("areaEchoPlaced"); s.lastAreaEcho = n.getLong("lastAreaEcho");
         return s;
     }
 
@@ -71,7 +71,7 @@ public final class RemnantState extends PersistentState {
         n.putInt("lastAreaX", lastAreaX); n.putInt("lastAreaZ", lastAreaZ);
         n.putInt("rememberedAreaX", rememberedAreaX); n.putInt("rememberedAreaZ", rememberedAreaZ);
         n.putInt("areaRevisits", areaRevisits); n.putBoolean("areaInitialized", areaInitialized);
-        n.putBoolean("rememberedAreaSet", rememberedAreaSet); n.putLong("lastAreaEcho", lastAreaEcho);
+        n.putBoolean("rememberedAreaSet", rememberedAreaSet); n.putBoolean("areaEchoPlaced", areaEchoPlaced); n.putLong("lastAreaEcho", lastAreaEcho);
         return n;
     }
 
@@ -102,7 +102,7 @@ public final class RemnantState extends PersistentState {
     public int rememberedAreaX() { return rememberedAreaX; }
     public int rememberedAreaZ() { return rememberedAreaZ; }
     public boolean rememberedAreaSet() { return rememberedAreaSet; }
-    public long lastAreaEcho() { return lastAreaEcho; }
+    public long lastAreaEcho() { return lastAreaEcho; }\n    public boolean areaEchoPlaced() { return areaEchoPlaced; }
 
     public void day(int v) { day = v; markDirty(); }
     public void stage(int v) { stage = v; markDirty(); }
@@ -138,5 +138,5 @@ public final class RemnantState extends PersistentState {
         else if (areaRevisits == 0) { rememberedAreaX = x; rememberedAreaZ = z; rememberedAreaSet = true; }
         lastAreaX = x; lastAreaZ = z; markDirty();
     }
-    public void lastAreaEcho(long v) { lastAreaEcho = v; markDirty(); }
+    public void lastAreaEcho(long v) { lastAreaEcho = v; markDirty(); }\n    public void areaEchoPlaced(boolean v) { areaEchoPlaced = v; markDirty(); }
 }
