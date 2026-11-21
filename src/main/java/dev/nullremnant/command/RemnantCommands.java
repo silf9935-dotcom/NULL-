@@ -72,6 +72,10 @@ public final class RemnantCommands {
                 }))
                 .then(CommandManager.literal("spawn").requires(source -> source.hasPermissionLevel(2)).executes(context -> {
                     ServerCommandSource source = context.getSource();
+                    if (!RemnantConfig.enabled) {
+                        source.sendError(Text.literal("NULL Remnant is disabled in the configuration."));
+                        return 0;
+                    }
                     ServerPlayerEntity player = source.getPlayerOrThrow();
                     ServerWorld world = source.getWorld();
                     BlockPos spawn = findSafeSpawn(world, player);
