@@ -105,7 +105,7 @@ public final class RemnantEvents {
         state.fear(2);
         world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ENDERMAN_STARE,
             SoundCategory.AMBIENT, 0.18f, 0.55f);
-        player.wakeUp(false, false);
+        player.wakeUp(false, true);
         player.sendMessage(Text.translatable("message.null_remnant.nightmare_wake"), false);
 
         if (!state.hasSeenNightmare()) {
