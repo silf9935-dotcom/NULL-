@@ -10,10 +10,12 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Registered Remnant hostile entity using a temporary vanilla zombie appearance, custom health/speed/damage, target and wander goals, pursuit, gaze reaction, retreat teleport, and despawn.
 - Stalker director can spawn the entity at a distance beginning at stage 2.
 - Player block-break activity contributes to an in-world memory/awareness counter and can produce rare stage-gated narrative feedback.
+- At stage 3+, a persistent memory anchor may produce a sign echo when the player revisits that location.
 - First sleep interruption includes a unique nightmare hint; later interruptions escalate at higher stages, with a subtle vanilla sound cue.
 - Stalker appearance and nightmare cues use vanilla Enderman audio as a temporary sound placeholder.
 - Stage 5 transition records a one-time finale flag and emits a finale introduction.
-- Client renderer registration (currently vanilla zombie model/texture placeholder).
+- Custom humanoid model with idle/walk motion and client renderer (texture currently borrowed from vanilla zombie; model UVs are prototype quality).
+- Nearby entity whisper HUD cue, shown only while the Remnant is close.
 - Commands: `/remnant lore`; operator-only `/remnant status` and `/remnant spawn`.
 - English/Russian language files, event catalog and lore archive.
 - JSON configuration file generated in the Minecraft config folder: master enable, nightmare toggle, subtle anomaly toggle, event/stalker frequency sliders (0–200%).
