@@ -94,5 +94,10 @@
   "command.null_remnant.despawned_one": "Removed %s Remnant entity from this dimension.",
   "command.null_remnant.despawned_many": "Removed %s Remnant entities from this dimension.",
   "item.null_remnant.remnant_spawn_egg": "Remnant Spawn Egg",
-  "itemGroup.null_remnant": "NULL: The Remnant"
+  "itemGroup.null_remnant": "NULL: The Remnant",
+  "sound.null_remnant.remnant_ambient": "The Remnant's static",
+  "sound.null_remnant.remnant_hurt": "The Remnant glitches",
+  "sound.null_remnant.remnant_death": "The Remnant collapses",
+  "sound.null_remnant.remnant_presence": "A corrupted signal nearby",
+  "sound.null_remnant.remnant_glitch": "Reality tears"
 }
