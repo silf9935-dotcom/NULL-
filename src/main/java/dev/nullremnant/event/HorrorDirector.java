@@ -30,8 +30,10 @@ public final class HorrorDirector {
         if (stage < 1 || now - state.lastHorror() < 1200L || state.lastEvent() == now) return;
         state.lastHorror(now);
 
-        int chance = new int[] {0, 8, 18, 30, 42}[Math.min(stage, 4)];
-        int scaledChance = chance * RemnantConfig.eventFrequency / 100;
+        int baseChance = new int[] {0, 8, 18, 30, 42}[Math.min(stage, 4)];
+        int pressure = Math.min(10, state.awareness() / 60 + state.fear() / 40);
+        int scaledChance = Math.min(100,
+            (baseChance + pressure) * RemnantConfig.eventFrequency / 100);
         if (world.getRandom().nextInt(100) >= scaledChance) return;
 
         List<ServerPlayerEntity> players = world.getPlayers();
