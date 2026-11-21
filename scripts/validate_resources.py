@@ -50,6 +50,14 @@ def main() -> None:
     if not isinstance(sounds, dict):
         raise SystemExit("sounds.json must contain a JSON object")
 
+    item_source = JAVA_DIR / "dev/nullremnant/item/RemnantItems.java"
+    if not item_source.is_file():
+        raise SystemExit("The dedicated creative-tab item registration is missing")
+    item_code = item_source.read_text(encoding="utf-8")
+    for required in ("remnant_spawn_egg", "Registries.ITEM_GROUP", "ItemGroups.SPAWN_EGGS"):
+        if required not in item_code:
+            raise SystemExit(f"RemnantItems.java is missing required registration: {required}")
+
     if not PNG_PATH.is_file():
         raise SystemExit("The Remnant entity texture is missing")
     png = PNG_PATH.read_bytes()
