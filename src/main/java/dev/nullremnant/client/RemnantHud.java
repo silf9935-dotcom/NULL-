@@ -32,7 +32,7 @@ public final class RemnantHud {
             if (!near) return;
 
             long now = client.world.getTime();
-            if (now - lastWhisper > 100L) {
+            if (whisper < 0 || now < lastWhisper || now - lastWhisper > 100L) {
                 lastWhisper = now;
                 whisper = (whisper + 1) % LINES.length;
             }
