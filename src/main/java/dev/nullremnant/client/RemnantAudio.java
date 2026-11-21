@@ -1,6 +1,5 @@
 package dev.nullremnant.client;
 
-import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.entity.RemnantEntity;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.sound.SoundEvents;
@@ -14,7 +13,7 @@ public final class RemnantAudio {
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!RemnantConfig.enabled || client.player == null || client.world == null) return;
+            if (client.player == null || client.world == null) return;
 
             long time = client.world.getTime();
             if (time - lastCue < 160L) return;
