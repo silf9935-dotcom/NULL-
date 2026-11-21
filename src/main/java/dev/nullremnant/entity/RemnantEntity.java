@@ -138,7 +138,7 @@ public class RemnantEntity extends ZombieEntity {
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("RemnantStareTicks", stareTicks);
         nbt.putInt("RemnantRetreatTicks", retreatTicks);
@@ -149,7 +149,7 @@ public class RemnantEntity extends ZombieEntity {
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         stareTicks = nbt.getInt("RemnantStareTicks");
         retreatTicks = nbt.getInt("RemnantRetreatTicks");
