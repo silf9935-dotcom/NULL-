@@ -37,14 +37,14 @@ public final class RemnantCommands {
                 .then(CommandManager.literal("lore").executes(context -> {
                     int stage = StateAccess.get(context.getSource().getWorld()).stage();
                     String[] entries = {
-                        "§8The first world was quiet. Too quiet to be empty.",
-                        "§7A shape was seen beyond the trees, then never again.",
-                        "§8The signs began appearing near places you had visited.",
-                        "§cIt copies the things you build. It cannot understand why.",
-                        "§4It believes this world belongs to the one who returns."
+                        "lore.null_remnant.stage0",
+                        "lore.null_remnant.stage1",
+                        "lore.null_remnant.stage2",
+                        "lore.null_remnant.stage3",
+                        "lore.null_remnant.stage4"
                     };
                     int index = Math.max(0, Math.min(stage, entries.length - 1));
-                    context.getSource().sendFeedback(() -> Text.literal(entries[index]), false);
+                    context.getSource().sendFeedback(() -> Text.translatable(entries[index]), false);
                     return Command.SINGLE_SUCCESS;
                 }))
                 .then(CommandManager.literal("reload").requires(source -> source.hasPermissionLevel(2)).executes(context -> {
