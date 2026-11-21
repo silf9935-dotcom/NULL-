@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import struct
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +37,12 @@ def main() -> None:
         raise SystemExit("fabric.mod.json must declare id=null_remnant")
     if mod.get("environment") != "*":
         raise SystemExit("The mod must declare the intended common/client environment")
+    entrypoints = mod.get("entrypoints", {})
+    if not isinstance(entrypoints, dict) or not {"main", "client"}.issubset(entrypoints):
+        raise SystemExit("fabric.mod.json must register both main and client entrypoints")
+    dependencies = mod.get("depends", {})
+    if dependencies.get("minecraft") != "~1.20.1" or dependencies.get("java") != ">=17":
+        raise SystemExit("fabric.mod.json must target Minecraft 1.20.1 and Java 17")
     if len(catalog.get("stages", [])) != 5:
         raise SystemExit("event_catalog.json must describe exactly five stages")
     if len(lore.get("entries", [])) != 5:
@@ -48,6 +55,9 @@ def main() -> None:
     png = PNG_PATH.read_bytes()
     if len(png) < 100 or not png.startswith(b"\x89PNG\r\n\x1a\n"):
         raise SystemExit("The Remnant entity texture is not a valid PNG file")
+    width, height = struct.unpack(">II", png[16:24])
+    if (width, height) != (64, 64):
+        raise SystemExit(f"The Remnant model expects a 64x64 texture, got {width}x{height}")
 
     java_sources = sorted(JAVA_DIR.rglob("*.java"))
     referenced_keys: set[str] = set()
@@ -106,7 +116,7 @@ def main() -> None:
         "Resource validation passed: "
         f"{len(java_sources)} Java files, {len(english_keys)} shared translations, "
         f"{len(catalog['stages'])} stages, {len(lore['entries'])} lore entries, "
-        f"{len(png)}-byte entity texture."
+        f"64x64 entity texture ({len(png)} bytes)."
     )
 
 
