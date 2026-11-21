@@ -14,8 +14,8 @@ JAVA_DIR = ROOT / "src/main/java"
 PNG_PATH = ROOT / "src/main/resources/assets/null_remnant/textures/entity/remnant.png"
 
 KEY_PATTERN = re.compile(
-    r'"((?:message|event|horror|stalker|anomaly|memory|sign|command|lore|hud)'
-    r'\.null_remnant\.[A-Za-z0-9_.]+)"'
+    r'"((?:(?:message|event|horror|stalker|anomaly|memory|sign|command|lore|hud|item)'
+    r'\.null_remnant\.[A-Za-z0-9_.]+|itemGroup\.null_remnant))"'
 )
 
 
