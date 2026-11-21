@@ -1,4 +1,5 @@
 package dev.nullremnant.event;
+import dev.nullremnant.config.RemnantConfig;
 import dev.nullremnant.state.RemnantState;
 import dev.nullremnant.state.StateAccess;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -9,7 +10,7 @@ public final class MemorySystem {
  private MemorySystem(){}
  public static void register(){
   PlayerBlockBreakEvents.AFTER.register((world,player,pos,state,blockEntity)->{
-   if(!(world instanceof ServerWorld server)||!(player instanceof ServerPlayerEntity p))return;
+   if(!RemnantConfig.enabled||!(world instanceof ServerWorld server)||!(player instanceof ServerPlayerEntity p))return;
    RemnantState memory=StateAccess.get(server);memory.intrusion(1);memory.awareness(1);
    int count=memory.intrusion();
    if(count>0&&count%128==0&&memory.stage()>=2){
