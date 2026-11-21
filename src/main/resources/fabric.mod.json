@@ -1,0 +1,7 @@
+{
+ "schemaVersion":1,"id":"null_remnant","version":"${version}",
+ "name":"NULL: The Remnant","description":"Slow-burn psychological horror in a nostalgic Minecraft world.",
+ "authors":["NULL project"],"license":"MIT","environment":"*",
+ "entrypoints":{"main":["dev.nullremnant.RemnantMod"]},
+ "depends":{"fabricloader":">=0.15.0","minecraft":"~1.20.1","java":">=17","fabric-api":"*"}
+}
