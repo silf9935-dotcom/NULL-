@@ -7,11 +7,23 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
+import java.util.List;
+
 public final class HorrorDirector {
-    private HorrorDirector() {}
+    private static final String[] MESSAGE_KEYS = {
+        "horror.null_remnant.silence",
+        "horror.null_remnant.movement",
+        "horror.null_remnant.return",
+        "horror.null_remnant.turn",
+        "horror.null_remnant.remembers"
+    };
+
+    private HorrorDirector() {
+    }
 
     public static void tick(ServerWorld world) {
-        if (!RemnantConfig.enabled || world.getPlayers().isEmpty() || world.getTime() % 1200L != 0) return;
+        if (!RemnantConfig.enabled || world.getPlayers().isEmpty() || world.getTime() % 1200L != 0L) return;
+
         RemnantState state = StateAccess.get(world);
         int stage = state.stage();
         long now = world.getTime();
@@ -22,10 +34,10 @@ public final class HorrorDirector {
         int scaledChance = chance * RemnantConfig.eventFrequency / 100;
         if (world.getRandom().nextInt(100) >= scaledChance) return;
 
-        ServerPlayerEntity player = world.getPlayers().get(world.getRandom().nextInt(world.getPlayers().size()));
-        String[] lines = {"The silence feels deliberate.", "Something moved beyond your sight.",
-            "You have been here before.", "Don't turn around.", "It remembers you."};
-        player.sendMessage(Text.literal("§8" + lines[world.getRandom().nextInt(lines.length)]), false);
+        List<ServerPlayerEntity> players = world.getPlayers();
+        ServerPlayerEntity player = players.get(world.getRandom().nextInt(players.size()));
+        String key = MESSAGE_KEYS[world.getRandom().nextInt(MESSAGE_KEYS.length)];
+        player.sendMessage(Text.translatable(key), false);
         state.awareness(1);
         state.fear(1);
         state.lastEvent(now);
