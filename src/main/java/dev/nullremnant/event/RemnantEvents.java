@@ -22,6 +22,7 @@ public final class RemnantEvents {
   for(ServerPlayerEntity p:world.getPlayers())sleepCheck(world,p,s,t);
   if(t%INTERVAL==0&&s.lastEvent()!=t){s.lastEvent(t);if(RNG.nextDouble()<=chance(stage)*RemnantConfig.eventFrequency/100.0){int roll=RNG.nextInt(100);switch(stage){case 0->early(world,roll);case 1->awakening(world,roll);case 2->aggression(world,roll);case 3->reality(world,roll);default->finale(world,roll);}}}
   HorrorDirector.tick(world);
+  StalkerDirector.tick(world);
   MemorySystem.tick(world);
   if(!world.getPlayers().isEmpty())AnomalyEvents.tryTrigger(world,world.getPlayers().get(0));
  }
