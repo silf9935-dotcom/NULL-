@@ -6,6 +6,8 @@ import dev.nullremnant.state.RemnantState;
 import dev.nullremnant.state.StateAccess;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 public final class StalkerDirector {
@@ -28,6 +30,7 @@ public final class StalkerDirector {
         entity.refreshPositionAndAngles(pos.getX()+0.5,pos.getY(),pos.getZ()+0.5,world.getRandom().nextFloat()*360,0);
         entity.setTarget(player);
         world.spawnEntity(entity);
+        world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ENDERMAN_STARE, SoundCategory.HOSTILE, 0.35f, 0.65f + world.getRandom().nextFloat()*0.2f);
         player.sendMessage(net.minecraft.text.Text.literal("§8You feel something watching from a distance."),false);
         state.awareness(3);
     }
