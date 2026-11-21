@@ -11,7 +11,7 @@ public final class HorrorDirector {
     private HorrorDirector() {}
 
     public static void tick(ServerWorld world) {
-        if (!RemnantConfig.enabled || world.getTime() % 1200L != 0 || world.getPlayers().isEmpty()) return;
+        if (!RemnantConfig.enabled || world.getPlayers().isEmpty()) return;
 
         RemnantState state = StateAccess.get(world);
         int stage = state.stage();
