@@ -1,24 +1,30 @@
 package dev.nullremnant.entity;
 
+import dev.nullremnant.state.StateAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.server.world.ServerWorld;
-import dev.nullremnant.state.StateAccess;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.EnumSet;
 
 public class RemnantEntity extends ZombieEntity {
     private int stareTicks;
     private int retreatTicks;
+    private double retreatX;
+    private double retreatZ;
 
     public RemnantEntity(EntityType<? extends RemnantEntity> type, World world) {
         super(type, world);
         setBaby(false);
+        setCanPickUpLoot(false);
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
@@ -36,16 +42,52 @@ public class RemnantEntity extends ZombieEntity {
         goalSelector.add(1, new MeleeAttackGoal(this, 1.15, false) {
             @Override
             public boolean canStart() {
-                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4 && super.canStart();
+                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4
+                    && retreatTicks <= 0 && super.canStart();
             }
+
             @Override
             public boolean shouldContinue() {
-                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4 && super.shouldContinue();
+                return getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() >= 4
+                    && retreatTicks <= 0 && super.shouldContinue();
             }
         });
-        goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 28.0f));
-        goalSelector.add(3, new WanderAroundFarGoal(this, 0.65));
-        goalSelector.add(4, new LookAroundGoal(this));
+        goalSelector.add(2, new Goal() {
+            {
+                setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+            }
+
+            @Override
+            public boolean canStart() {
+                return retreatTicks <= 0 && getTarget() instanceof PlayerEntity
+                    && getWorld() instanceof ServerWorld server && StateAccess.get(server).stage() < 4;
+            }
+
+            @Override
+            public boolean shouldContinue() {
+                return canStart();
+            }
+
+            @Override
+            public void tick() {
+                if (!(getTarget() instanceof PlayerEntity player)) return;
+                getLookControl().lookAt(player, 25.0f, 25.0f);
+                double distance = squaredDistanceTo(player);
+                if (distance > 100.0) {
+                    getNavigation().startMovingTo(player, 0.72);
+                } else {
+                    getNavigation().stop();
+                }
+            }
+
+            @Override
+            public void stop() {
+                getNavigation().stop();
+            }
+        });
+        goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 28.0f));
+        goalSelector.add(4, new WanderAroundFarGoal(this, 0.55));
+        goalSelector.add(5, new LookAroundGoal(this));
         targetSelector.add(1, new RevengeGoal(this));
         targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true) {
             @Override
@@ -60,34 +102,68 @@ public class RemnantEntity extends ZombieEntity {
         super.tick();
         LivingEntity target = getTarget();
         if (target instanceof PlayerEntity player && player.isAlive()) {
-            if (squaredDistanceTo(player) < 16 && looksAt(player, this)) {
+            if (squaredDistanceTo(player) < 256.0 && looksAt(player, this)) {
                 stareTicks++;
             } else {
                 stareTicks = Math.max(0, stareTicks - 2);
             }
-            if (stareTicks > 80) {
+            if (stareTicks >= 80) {
                 retreatTicks = 100;
+                retreatX = player.getX();
+                retreatZ = player.getZ();
                 stareTicks = 0;
+                setInvisible(true);
+                setTarget(null);
+                getNavigation().stop();
             }
         }
 
         if (retreatTicks > 0) {
             retreatTicks--;
-            setTarget(null);
-            if (target instanceof PlayerEntity player && tickCount % 20 == 0) {
-                double dx = getX() - player.getX();
-                double dz = getZ() - player.getZ();
-                teleport(getX() + Math.signum(dx) * 4.0, getY(), getZ() + Math.signum(dz) * 4.0);
-            }
+            if (tickCount % 20 == 0) retreatToCover();
+            if (retreatTicks == 0) setInvisible(false);
         }
 
-        if (tickCount > 1200 && getTarget() == null) discard();
+        if (tickCount > 2400 && getTarget() == null && retreatTicks <= 0) discard();
+    }
+
+    private void retreatToCover() {
+        if (!(getWorld() instanceof ServerWorld world)) return;
+        double awayX = getX() - retreatX;
+        double awayZ = getZ() - retreatZ;
+        double length = Math.sqrt(awayX * awayX + awayZ * awayZ);
+        if (length < 0.01) {
+            awayX = getRandom().nextDouble() - 0.5;
+            awayZ = getRandom().nextDouble() - 0.5;
+            length = Math.sqrt(awayX * awayX + awayZ * awayZ);
+        }
+        awayX /= length;
+        awayZ /= length;
+
+        for (int i = 0; i < 6; i++) {
+            double angle = (i - 2.5) * 0.38;
+            double dx = awayX * Math.cos(angle) - awayZ * Math.sin(angle);
+            double dz = awayX * Math.sin(angle) + awayZ * Math.cos(angle);
+            BlockPos feet = BlockPos.ofFloored(getX() + dx * 6.0, getY(), getZ() + dz * 6.0);
+            if (!world.isChunkLoaded(feet) || !world.getBlockState(feet).isAir()
+                    || !world.getBlockState(feet.up()).isAir()
+                    || !world.getBlockState(feet.down()).isSolid()
+                    || world.getLightLevel(feet) > 7) continue;
+            refreshPositionAndAngles(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5,
+                getYaw() + 110.0f, getPitch());
+            return;
+        }
     }
 
     private static boolean looksAt(PlayerEntity player, LivingEntity target) {
         Vec3d look = player.getRotationVec(1.0f).normalize();
         Vec3d toward = target.getPos().subtract(player.getPos()).normalize();
         return look.dotProduct(toward) > 0.94;
+    }
+
+    @Override
+    protected boolean burnsInDaylight() {
+        return false;
     }
 
     @Override
