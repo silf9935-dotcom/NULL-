@@ -7,6 +7,7 @@ import net.minecraft.util.TypeFilter;
 
 public final class RemnantAudio {
     private static long lastCue = -1L;
+    private static net.minecraft.client.world.ClientWorld lastWorld;
 
     private RemnantAudio() {
     }
@@ -15,8 +16,12 @@ public final class RemnantAudio {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.world == null) return;
 
+            if (lastWorld != client.world) {
+                lastWorld = client.world;
+                lastCue = -1L;
+            }
             long time = client.world.getTime();
-            if (time - lastCue < 160L) return;
+            if (lastCue >= 0L && time >= lastCue && time - lastCue < 160L) return;
 
             boolean distantPresence = !client.world.getEntitiesByType(
                 TypeFilter.instanceOf(RemnantEntity.class),
