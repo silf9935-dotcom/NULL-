@@ -11,7 +11,7 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Stalker director can spawn the entity at a distance beginning at stage 2.
 - Player block-break activity contributes to an in-world memory/awareness counter and can produce rare stage-gated narrative feedback. Narrative echoes use the actual selected player's name.
 - At stage 3+, a persistent memory anchor may produce a sign echo when the player revisits that location.
-- First sleep interruption includes a unique nightmare hint; later interruptions escalate at higher stages, with a subtle vanilla sound cue.
+- Nightmare interruptions select from players who are actually sleeping (rather than always favoring the first server player); the first interruption includes a unique hint and later interruptions escalate at higher stages.
 - Stalker appearance and nightmare cues use vanilla Enderman audio as a temporary sound placeholder.
 - Stage 5 transition records a one-time finale flag and emits a finale introduction.
 - Custom humanoid model with idle/walk motion and client renderer (texture currently borrowed from vanilla zombie; model UVs are prototype quality).
