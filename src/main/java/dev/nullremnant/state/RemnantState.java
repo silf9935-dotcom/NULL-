@@ -128,4 +128,15 @@ public final class RemnantState extends PersistentState {
         doorX = x; doorY = y; doorZ = z; markDirty();
     }
     public void doorEchoPlaced(boolean v) { doorEchoPlaced = v; markDirty(); }
+    public void sampleArea(int x, int z) {
+        if (!areaInitialized) {
+            lastAreaX = x; lastAreaZ = z; rememberedAreaX = x; rememberedAreaZ = z;
+            areaInitialized = true; rememberedAreaSet = true; markDirty(); return;
+        }
+        if (x == lastAreaX && z == lastAreaZ) return;
+        if (x == rememberedAreaX && z == rememberedAreaZ) areaRevisits++;
+        else if (areaRevisits == 0) { rememberedAreaX = x; rememberedAreaZ = z; rememberedAreaSet = true; }
+        lastAreaX = x; lastAreaZ = z; markDirty();
+    }
+    public void lastAreaEcho(long v) { lastAreaEcho = v; markDirty(); }
 }
