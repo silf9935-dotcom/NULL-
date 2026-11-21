@@ -34,5 +34,6 @@ public final class StalkerDirector {
         world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ENDERMAN_STARE, SoundCategory.HOSTILE, 0.35f, 0.65f + world.getRandom().nextFloat()*0.2f);
         player.sendMessage(net.minecraft.text.Text.literal("§8You feel something watching from a distance."),false);
         state.awareness(3);
+        state.fear(3);
     }
 }
