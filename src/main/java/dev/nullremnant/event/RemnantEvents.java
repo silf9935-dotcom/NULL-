@@ -75,5 +75,17 @@ public final class RemnantEvents {
   w.playSound(null,center,SoundEvents.AMBIENT_CAVE.value(),SoundCategory.AMBIENT,0.65f,0.65f);
   player.sendMessage(Text.literal("§8Something has been placed nearby."),false);
  }
- private static void sign(ServerWorld w,String text){ServerPlayerEntity p=w.getPlayers().get(RNG.nextInt(w.getPlayers().size()));BlockPos pos=w.getTopPosition(Heightmap.Type.MOTION_BLOCKING,p.getBlockPos().add(RNG.nextInt(9)-4,0,RNG.nextInt(9)-4));if(!w.getBlockState(pos).isAir()||!w.getBlockState(pos.down()).isSolid())return;w.setBlockState(pos,Blocks.OAK_SIGN.getDefaultState());if(w.getBlockEntity(pos) instanceof SignBlockEntity be){be.changeText(signText->signText.withMessage(0,Text.literal(text)).withMessage(1,Text.empty()),true);be.markDirty();w.updateListeners(pos,w.getBlockState(pos),w.getBlockState(pos),3);}}
+ private static void sign(ServerWorld w,String text){
+  ServerPlayerEntity player=w.getPlayers().get(RNG.nextInt(w.getPlayers().size()));
+  BlockPos sample=player.getBlockPos().add(RNG.nextInt(9)-4,0,RNG.nextInt(9)-4);
+  if(!w.isChunkLoaded(sample))return;
+  BlockPos pos=w.getTopPosition(Heightmap.Type.MOTION_BLOCKING,sample);
+  if(!w.isChunkLoaded(pos)||!w.getBlockState(pos).isAir()||!w.getBlockState(pos.down()).isSolid())return;
+  if(!w.setBlockState(pos,Blocks.OAK_SIGN.getDefaultState()))return;
+  if(w.getBlockEntity(pos) instanceof SignBlockEntity sign){
+   sign.changeText(signText->signText.withMessage(0,Text.literal(text)).withMessage(1,Text.empty()),true);
+   sign.markDirty();
+   w.updateListeners(pos,w.getBlockState(pos),w.getBlockState(pos),3);
+  }
+ }
 }
