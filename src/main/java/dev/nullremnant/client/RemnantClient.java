@@ -11,5 +11,6 @@ public final class RemnantClient implements ClientModInitializer {
   net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(MODEL_LAYER,RemnantModel::getTexturedModelData);
   EntityRendererRegistry.register(RemnantEntities.REMNANT,RemnantRenderer::new);
   RemnantHud.register();
+  RemnantAudio.register();
  }
 }
