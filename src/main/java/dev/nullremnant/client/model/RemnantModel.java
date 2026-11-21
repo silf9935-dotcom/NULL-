@@ -1,6 +1,5 @@
 package dev.nullremnant.client.model;
 import dev.nullremnant.entity.RemnantEntity;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.model.ModelData;
 import net.minecraft.client.model.ModelPartBuilder;
