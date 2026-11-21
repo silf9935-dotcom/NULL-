@@ -1,6 +1,7 @@
 package dev.nullremnant.entity;
 
 import dev.nullremnant.config.RemnantConfig;
+import dev.nullremnant.RemnantSounds;
 import dev.nullremnant.state.StateAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
@@ -16,7 +17,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
+
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.Heightmap;
@@ -229,17 +230,17 @@ public class RemnantEntity extends ZombieEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_ENDERMAN_STARE;
+        return RemnantSounds.AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_ENDERMAN_HURT;
+        return RemnantSounds.HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_ENDERMAN_DEATH;
+        return RemnantSounds.DEATH;
     }
 
     @Override
