@@ -25,11 +25,11 @@ public final class MemorySystem {
                 if (block.isIn(BlockTags.DOORS) || block.isIn(BlockTags.TRAPDOORS) || block.isIn(BlockTags.FENCE_GATES)) {
                     RemnantState state = StateAccess.get(server);
                     state.recordDoor(hit.getBlockPos().getX(), hit.getBlockPos().getY(), hit.getBlockPos().getZ());
-                    if (state.stage() >= 2 && state.doorInteractions() % 6 == 0) {
-                        int visits = state.doorInteractions();
-                        String echo = visits % 18 == 0 && state.stage() >= 4
+                    if (state.stage() >= 2 && state.doorRepeatCount() >= 4 && state.doorRepeatCount() % 3 == 0) {
+                        int visits = state.doorRepeatCount();
+                        String echo = visits >= 9 && state.stage() >= 4
                             ? "§4This door has become part of the pattern."
-                            : visits % 12 == 0 && state.stage() >= 3
+                            : visits >= 6 && state.stage() >= 3
                                 ? "§8You remember opening this. It remembers you."
                                 : "§8The sound of the door lingers longer than it should.";
                         serverPlayer.sendMessage(Text.literal(echo), false);
