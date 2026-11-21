@@ -1,4 +1,1 @@
-{
- "ambient_whisper": {"sounds":["minecraft:ambient.cave"],"subtitle":"NULL: distant ambience"},
- "distant_presence": {"sounds":["minecraft:entity.enderman.stare"],"subtitle":"NULL: something watches"}
-}
+{}
