@@ -35,6 +35,7 @@ public final class HorrorDirector {
         };
         player.sendMessage(Text.literal("§8" + lines[world.getRandom().nextInt(lines.length)]), false);
         state.awareness(1);
+        state.fear(1);
         state.lastEvent(world.getTime());
     }
 }
