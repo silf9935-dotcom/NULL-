@@ -223,7 +223,9 @@ public final class MemorySystem {
                         sign.markDirty();
                         world.updateListeners(echo, world.getBlockState(echo), world.getBlockState(echo), 3);
                         state.doorEchoPlaced(true);
-                        player.sendMessage(Text.literal(state.stage() >= 4 ? "§4It remembers how you enter." : "§8A familiar sound returns."), false);
+                        player.sendMessage(Text.translatable(state.stage() >= 4
+                            ? "memory.null_remnant.door_return_finale"
+                            : "memory.null_remnant.door_return"), false);
                     }
                 }
                 break;
