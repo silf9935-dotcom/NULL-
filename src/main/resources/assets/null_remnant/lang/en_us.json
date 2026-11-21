@@ -91,6 +91,6 @@
   "command.null_remnant.spawn_failed": "The Remnant could not be added to this world.",
   "command.null_remnant.spawned": "Spawned the Remnant at %s, %s, %s.",
   "command.null_remnant.despawned": "Removed %s Remnant entities from this dimension.",
-  "command.null_remnant.despawned_one": "Removed 1 Remnant entity from this dimension.",
+  "command.null_remnant.despawned_one": "Removed %s Remnant entity from this dimension.",
   "command.null_remnant.despawned_many": "Removed %s Remnant entities from this dimension."
 }
