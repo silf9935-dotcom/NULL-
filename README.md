@@ -6,8 +6,8 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Fabric entrypoint and per-world persistent state.
 - Five escalation stages with day thresholds: 0–2, 3–9, 10–14, 15–20, 21+.
 - Narrative event pools: whispers, messages, lore signs, bedrock-cross anomaly, sleep interruption.
-- Horror director and rare environment anomaly hooks with config-aware chance scaling and player-target selection; directors avoid stacking a second message on the regular narrative event tick.
-- Registered Remnant hostile entity using a temporary vanilla zombie appearance, custom health/speed/damage, target and wander goals, pursuit, gaze reaction, retreat teleport, and despawn.
+- Horror director and rare environment anomaly hooks with config-aware chance scaling, randomized player targeting, and persistent per-director cooldowns.
+- Registered Remnant entity with target/wander/look goals, gaze-triggered retreat, and staged aggression (melee attack is enabled only at stage 5); it despawns after a long idle period.
 - Stalker director can spawn the entity at a distance beginning at stage 2.
 - Player block-break activity contributes to an in-world memory/awareness counter and can produce rare stage-gated narrative feedback. Narrative echoes use the actual selected player's name.
 - At stage 3+, a persistent memory anchor may produce a sign echo when the player revisits that location.
@@ -49,7 +49,7 @@ Use `/remnant reload` (operator permission level 2) to reload the file without r
 - [ ] Launch a Fabric 1.20.1 client and verify the Remnant model/renderer.
 - [ ] Create a fresh survival world; verify stage progression after sleeping / advancing days.
 - [ ] Verify configuration switches and 0% frequency suppress events.
-- [ ] Verify Remnant spawning, pursuit, gaze response, retreat, and despawn.
+- [ ] Verify Remnant spawning, stage-gated aggression, pursuit, gaze response, retreat, and despawn.
 - [ ] Verify signs/anomalies only occur in loaded, safe positions and do not overwrite player builds.
 - [ ] Verify save/reload persistence of stage and memory anchor.
 - [ ] Test multiplayer event messages and entity targeting.
