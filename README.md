@@ -16,6 +16,7 @@ Psychological horror prototype for **Minecraft Java 1.20.1 / Fabric / Java 17**.
 - Client renderer registration (currently vanilla zombie model/texture placeholder).
 - Commands: `/remnant lore`; operator-only `/remnant status` and `/remnant spawn`.
 - English/Russian language files, event catalog and lore archive.
+- JSON configuration file generated in the Minecraft config folder: master enable, nightmare toggle, subtle anomaly toggle, event/stalker frequency sliders (0–200%).
 - GitHub Actions build workflow.
 
 ## Build
